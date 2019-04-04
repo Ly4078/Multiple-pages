@@ -1,8 +1,13 @@
 # dome-deploy
 
+<<<<<<< HEAD
 > A Vue.js project
 
 ## Build Setup
+=======
+123
+# 准备工作
+>>>>>>> 580c9c055d4a86625655b079a7ef1ff7957b619e
 
 ``` bash
 # install dependencies
