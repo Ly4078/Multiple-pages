@@ -5,6 +5,7 @@
       <img src="../../assets/image/close.png" alt>
     </marquee>
     <div class="goods_ul">
+      <span v-show="goodslist.length<1">此设备没有商品或设备异常，请联系管理员</span>
       <ul>
         <li
           v-for="(item,index) in goodslist"
@@ -59,6 +60,7 @@ export default {
       selected: "",
       actlist: [],
       goodslist: [],
+      playtype:'', //1 微信  2 支付宝 3 其它（微信支付宝都可以）
       ismarquee: true
     };
   },
@@ -74,7 +76,7 @@ export default {
   methods: {
     //查询列表数据
     getlist(para) {
-      let _para = para ? para : "865533039248574";
+      let _para = para ? para : "865533039233535";
       Indicator.open({
         text: "加载中...",
         spinnerType: "fading-circle"
@@ -154,14 +156,40 @@ export default {
     },
     //去结算
     settlement() {
-      console.log("settlement:");
-      this.$store.commit("actgoodslist", this.actlist);
+      let _parms={},_list=[];
+      const _date=new Date();
+      let _md5=this.$md5(this.amout.toFixed(2).toString()+"liaoyibi"+_date.getTime().toString());
+      for(let i in this.actlist){
+        _list.push(this.actlist[i].channelId)
+      }	
+      _parms={
+        channelIdList:_list,
+        signature: _md5,
+        timestamp:_date.getTime().toString()
+      }
+      this.$http.post("yub/ila",_parms).then((res)=>{
+        console.log("res:",res)
+      })
       // this.$router.push({ path: "/paypage", params: {} });
       //
+    },
+    //支付环境判断
+    getplaytype(){
+      if (/MicroMessenger/.test(window.navigator.userAgent)) {
+          this.playtype=1;
+            // alert('微信客户端');
+        } else if (/AlipayClient/.test(window.navigator.userAgent)) {
+          this.playtype=2;
+            // alert('支付宝客户端');
+        } else {
+          this.playtype=3;
+            // alert('其他浏览器');
+        }
     }
   },
   created() {
     console.log(this.$md5("holle"));
+    this.getplaytype();
     let url = document.location.toString();
     let arrUrl = url.split("?");
     let para = arrUrl[1];

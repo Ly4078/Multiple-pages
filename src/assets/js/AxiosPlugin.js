@@ -1,9 +1,10 @@
 require("es6-promise").polyfill();
 import axios from "axios";
+import { Toast } from 'mint-ui';
 
 var _this = this;
 export const Axios = axios.create({
-  // baseURL:  'http://192.168.88.200:8080/mobile',//生产
+  // baseURL:  'http://192.168.88.200:8080/mobile/',//生产
   baseURL: "/api/", //开发
   timeout: 10000
 });
@@ -57,34 +58,29 @@ Axios.interceptors.response.use(
       console.log('error.response.data:',error.response.data)
     }
     if (error.response.status === 401 || error.response.status === 403) {
-      Message({
-        duration: 5000,
-        showClose: true,
+      Toast({
         message: error.response.data,
-        type: "error"
+        position: 'bottom',
+        duration: 5000
       });
     } else if (error.response.status === 400) {
-      Message({
-        duration: 5000,
-        showClose: true,
+      Toast({
         message: error.response.data,
-        type: "error"
+        position: 'bottom',
+        duration: 5000
       });
     } else if (error.response.status === 500) {
-      Message({
-        duration: 5000,
-        showClose: true,
-        message: "系统异常，稍后重试",
-        type: "error"
+      Toast({
+        message: error.response.data,
+        position: 'bottom',
+        duration: 5000
       });
       // Promise.reject("系统异常，稍后重试");
     } else {
-
-      Message({
-        duration: 5000,
-        showClose: true,
+      Toast({
         message: error.response.data,
-        type: "error"
+        position: 'bottom',
+        duration: 5000
       });
       return error;
     }
