@@ -5,8 +5,9 @@ import { Toast } from 'mint-ui';
 var _this = this;
 export const Axios = axios.create({
   // baseURL:  'http://192.168.88.200:8080/mobile/',//生产
-  baseURL: "/api/", //开发
-  timeout: 10000
+  BASEURL: window.location.host + "/",
+  // baseURL: "/api/", //开发
+  // timeout: 10000
 });
 
 //POST传参序列化(添加请求拦截器)

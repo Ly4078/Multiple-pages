@@ -4,14 +4,14 @@
       <div class="top1">
         <img src="../../assets/image/left_icon.png" alt @click="goback"><span>商品缺货房间</span>
       </div>
-      <div class="top2">名称：<span>{{repdata.goodsName}}</span></div>
+      <div class="top2">名称：<span>{{repdata.name}}</span></div>
     </div>
     <div class="lockcont">
       <ul>
         <li v-for="item in datalist" :key="item.id" @click="handitem(item)">
           <div class="lileft">
-            <div class="llt">房号：{{item.roomNO}}</div>
-            <div class="llb">{{item.num}}件商品待补货</div>
+            <div class="llt">房号：{{item.roomNo}}</div>
+            <div class="llb">{{item.amount}}件商品待补货</div>
           </div>
           <div class="liright">
             <img src="../../assets/image/right_icon.png" alt>
@@ -28,36 +28,7 @@ export default {
   data() {
     return {
       repdata: {},
-      datalist: [
-        {
-          id: 1,
-          roomNO: 114,
-          num: 2,
-          goodsName: "印度神油",
-          qnum: 1
-        },
-        {
-          id: 2,
-          roomNO: 115,
-          num: 6,
-          goodsName: "情人套装",
-          qnum: 1
-        },
-        {
-          id: 3,
-          roomNO: 116,
-          num: 3,
-          goodsName: "杜蕾斯大胆爱",
-          qnum: 2
-        },
-        {
-          id: 4,
-          roomNO: 117,
-          num: 1,
-          goodsName: "冈本 3只装",
-          qnum: 1
-        }
-      ],
+      datalist: [],
       msg: "this is lack page"
     };
   },
@@ -65,6 +36,12 @@ export default {
     //回退到上一页面
     goback() {
       window.history.back(-1);
+    },
+    //补货房间列表
+    getroomlist(hotelId,goodsId){
+      this.$http.get("replenish/room/"+hotelId+"/"+goodsId).then((res)=>{
+        this.datalist=res.data;
+      })
     },
     //点击某个数据
     handitem(obj) {
@@ -77,8 +54,8 @@ export default {
   created() {
     if (this.$route.query && this.$route.query.id) {
       this.repdata = this.$route.query;
+      this.getroomlist(this.$store.state.hotelId,this.$route.query.id);
     }
-    console.log("route", this.$route.query);
   }
 };
 </script>
@@ -94,7 +71,7 @@ export default {
     text-align: center;
     .top1 {
       font-size: 36px;
-      font-family: PingFang-SC-Bold;
+      font-family: 'PingFang-SC-Bold';
       font-weight: bold;
       height: 60px;
       color: rgba(21, 21, 21, 1);
@@ -105,13 +82,13 @@ export default {
         padding: 10px;
       }
       span{
-        box-shadow:0px -18px  #fea34a inset;
+        box-shadow:0px -18px #fea34a inset;
       }
     }
     .top2 {
       padding: 24px 0;
       font-size: 24px;
-      font-family: PingFang-SC-Regular;
+      font-family: 'PingFang-SC-Regular';
       font-weight: 400;
       color:#8A8A8A;
       span{

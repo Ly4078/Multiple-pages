@@ -13,9 +13,9 @@
           :class="item.actInd? 'actclass' : '' "
           @click.stop="selectItem(item,index)"
         >
-         <!-- @click.stop="handItem(item)" -->
+          <div class="serial">{{item.channelNo}}</div>
           <img :src="$GLOBAL.API+item.thumb" alt="商品图片">
-          <div :class="item.actInd? 'goodsdateil actclass' : 'goodsdateil' ">
+          <div class="goodsdateil">
             <div class="title">{{item.name}}</div>
             <div class="suoming">{{item.remark}}</div>
             <div class="more" @click.stop="selectItem(item,index)">
@@ -60,13 +60,12 @@ export default {
       selected: "",
       actlist: [],
       goodslist: [],
-      playtype:'', //1 微信  2 支付宝 3 其它（微信支付宝都可以）
+      playtype: "", //1 微信  2 支付宝 3 其它（微信支付宝都可以）
       ismarquee: true
     };
   },
   watch: {
     selected: function() {
-      console.log("selected:", this.selected);
       if (this.selected == 2) {
         this.settlement();
       }
@@ -76,7 +75,7 @@ export default {
   methods: {
     //查询列表数据
     getlist(para) {
-      let _para = para ? para : "865533039233535";
+      let _para = para ? para : "865533039122167";
       Indicator.open({
         text: "加载中...",
         spinnerType: "fading-circle"
@@ -109,15 +108,10 @@ export default {
         }, 100);
       });
     },
-    //点击查看某个数据详情
-    handItem(obj) {
-      console.log("handItem:", obj);
-    },
     //选择某个数据
     selectItem(obj, ind) {
       this.goodslist[ind].actInd = !this.goodslist[ind].actInd;
       let _salePrice = this.goodslist[ind].salePrice;
-
       if (this.goodslist[ind].actInd) {
         this.amout = this.calculation(this.amout, _salePrice, 1);
         this.actlist.push(obj);
@@ -132,7 +126,6 @@ export default {
           }
         }
       }
-      console.log("actlist:", this.actlist);
     },
     //计算金额
     calculation(arg1, arg2, val) {
@@ -156,39 +149,51 @@ export default {
     },
     //去结算
     settlement() {
-      let _parms={},_list=[];
-      const _date=new Date();
-      let _md5=this.$md5(this.amout.toFixed(2).toString()+"liaoyibi"+_date.getTime().toString());
-      for(let i in this.actlist){
-        _list.push(this.actlist[i].channelId)
-      }	
-      _parms={
-        channelIdList:_list,
-        signature: _md5,
-        timestamp:_date.getTime().toString()
+      let _parms = {},
+        _list = [];
+      const _date = new Date();
+      let _md5 = this.$md5(
+        this.amout.toFixed(2).toString() +
+          "liaoyibi" +
+          _date.getTime().toString()
+      );
+      for (let i in this.actlist) {
+        _list.push(this.actlist[i].channelId);
       }
-      this.$http.post("yub/ila",_parms).then((res)=>{
-        console.log("res:",res)
-      })
+      _parms = {
+        channelIdList: _list,
+        signature: _md5,
+        timestamp: _date.getTime().toString()
+      };
+      this.$http.post("yub/ila", _parms).then(res => {
+        console.log("res:", res);
+        console.log(res.data);
+        this.html = res.data;
+        var form = res.data;
+
+        const div = document.createElement("div");
+        div.innerHTML = form; //此处form就是后台返回接收到的数据
+        document.body.appendChild(div);
+        document.forms[0].submit();
+      });
       // this.$router.push({ path: "/paypage", params: {} });
       //
     },
     //支付环境判断
-    getplaytype(){
+    getplaytype() {
       if (/MicroMessenger/.test(window.navigator.userAgent)) {
-          this.playtype=1;
-            // alert('微信客户端');
-        } else if (/AlipayClient/.test(window.navigator.userAgent)) {
-          this.playtype=2;
-            // alert('支付宝客户端');
-        } else {
-          this.playtype=3;
-            // alert('其他浏览器');
-        }
+        this.playtype = 1;
+        // alert('微信客户端');
+      } else if (/AlipayClient/.test(window.navigator.userAgent)) {
+        this.playtype = 2;
+        // alert('支付宝客户端');
+      } else {
+        this.playtype = 3;
+        // alert('其他浏览器');
+      }
     }
   },
   created() {
-    console.log(this.$md5("holle"));
     this.getplaytype();
     let url = document.location.toString();
     let arrUrl = url.split("?");
@@ -199,6 +204,10 @@ export default {
 </script>
 <style lang="less">
 .goods_list {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: #FDFAE4;
   marquee {
     position: fixed;
     top: 0;
@@ -209,9 +218,7 @@ export default {
       height: 15px;
     }
   }
-  .actclass {
-    background: #fdd808;
-  }
+  
   .goods_ul {
     width: 93.6%;
     height: 100%;
@@ -221,18 +228,28 @@ export default {
     ul {
       li {
         width: 340px;
-        height: 480px;
+        height: 510px;
         float: left;
         margin-bottom: 22px;
+        background: #fff;
+        .serial {
+          width: 32px;
+          height: 32px;
+          background: #fdd808;
+          border-radius: 4px 0px 0px 0px;
+          position: absolute;
+          font-size: 30px;
+          font-family: "DIN-Bold";
+          color: #151515;
+          line-height: 32px;
+        }
         img {
           width: 98%;
-          margin: 1%;
+          padding:2% 1%;
           height: 340px;
-          background: #bebebe;
           border-radius: 4px;
         }
         .goodsdateil {
-          background: #fff;
           padding: 12px 8px 10px 13px;
           .title,
           .suoming {
@@ -265,14 +282,11 @@ export default {
               font-size: 26px;
               border-radius: 50%;
               font-weight: 800;
-              background: #fff;
               float: right;
             }
           }
         }
-        .actclass {
-          background: #fdd808;
-        }
+        
       }
       li:nth-child(2n) {
         // background: blue;
@@ -281,6 +295,9 @@ export default {
         // background: red;
         margin-right: 22px;
       }
+      .actclass {
+          background: #fdd808;
+        }
     }
   }
   .mint-tabbar {

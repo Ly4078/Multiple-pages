@@ -3,94 +3,54 @@
     <div class="addtop">
       <div class="top1">
         <img src="../../assets/image/left_icon.png" alt @click="goback">
-        <span>房间{{repdata.roomNO}}</span>
+        <span>房间{{repdata.roomNo}}</span>
       </div>
-      <div class="top2">设备：{{repdata.sbh}}</div>
+      <div class="top2">设备：{{repdata.equipNo}}</div>
     </div>
     <div class="addcont">
       <!-- <mt-checklist v-model="value" :options="['选项A', '选项B', '选项C']"></mt-checklist> -->
       <ul>
-        <li v-for="(item,index) in options" :key="item.id" @click="handitem(item,index)">
+        <li v-for="(item,index) in goodslist" :key="item.id" @click="handitem(item,index)">
           <img class="selectedimg" v-show="item.act" src="../../assets/image/yixz_icon.png" alt>
           <img class="selectedimg" v-show="!item.act" src="../../assets/image/weisz_icon.png" alt>
           <div class="liright">
-            <img class="goodsimg" src="../../assets/image/gouwuche.png" alt>
+            <img class="goodsimg" :src="$GLOBAL.API+item.thumb" alt>
             <p class="goodsname">
-              {{item.goodsName}}
-              <span>货道{{item.huodao}}</span>
+              {{item.name}}
+              <span>货道{{item.channelNo}}</span>
             </p>
-            <p class="qhdate">已缺货{{item.qhdate | fiterdate}}</p>
+            <p class="qhdate">已缺货{{item.hour | fiterdate}}</p>
           </div>
         </li>
       </ul>
     </div>
-
-    <mt-tabbar v-model="selected">
-      <mt-tab-item id="1">开门补货</mt-tab-item>
-      <mt-tab-item id="2">补货完成</mt-tab-item>
-    </mt-tabbar>
+    <div class="ad_footer">
+      <div @click="handbuton(1)">开门补货</div>
+      <div @click="handbuton(2)">补货完成</div>
+    </div>
+    <!-- <mt-tabbar v-model="selected" @click="handbuton"> -->
+    <!-- <mt-tab-item id="1">开门补货</mt-tab-item>
+    <mt-tab-item id="2">补货完成</mt-tab-item>-->
+    <!-- </mt-tabbar> -->
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import { Tabbar, TabItem } from "mint-ui";
-import { Checklist } from "mint-ui";
-
-Vue.component(Checklist.name, Checklist);
-Vue.component(Tabbar.name, Tabbar);
-Vue.component(TabItem.name, TabItem);
+// import { Tabbar, TabItem } from "mint-ui";
+// import { Checklist } from "mint-ui";
+import { Toast } from "mint-ui";
+// Vue.component(Checklist.name, Checklist);
+// Vue.component(Tabbar.name, Tabbar);
+// Vue.component(TabItem.name, TabItem);
 var timer = null;
 export default {
   name: "addto",
   data() {
     return {
       repdata: {},
-      selected: "",
       actlist: [],
-      msg: "this is addto page",
-      options: [
-        {
-          id: 1,
-          imgurl: "#",
-          goodsName: "印度神油",
-          qhdate: "68",
-          huodao: 2,
-          act: false
-        },
-        {
-          id: 2,
-          imgurl: "#",
-          goodsName: "情人套装",
-          qhdate: "71",
-          huodao: 7,
-          act: false
-        },
-        {
-          id: 3,
-          imgurl: "#",
-          goodsName: "杜蕾斯大胆爱",
-          qhdate: "21",
-          huodao: 3,
-          act: false
-        },
-        {
-          id: 4,
-          imgurl: "#",
-          goodsName: "冈本 3只装",
-          qhdate: "124",
-          huodao: 4,
-          act: false
-        },
-        {
-          id: 5,
-          imgurl: "#",
-          goodsName: "跳蛋",
-          qhdate: "36",
-          huodao: 5,
-          act: false
-        }
-      ]
+      goodslist: []
     };
   },
   filters: {
@@ -100,25 +60,30 @@ export default {
       return _day ? _day + "天" + _hour + "小时" : _hour + "小时";
     }
   },
-  watch: {
-    selected: function() {
-      if (this.selected == 1) {
-        this.startadd();
-      } else if (this.selected == 2) {
-        this.endadd();
-      }
-    }
-  },
   methods: {
     //回退到上一页面
     goback() {
       window.history.back(-1);
     },
+    //查询列表数据
+    getdetails(roomNo) {
+      const _this = this;
+      this.$http.get("replenish/details/" + roomNo).then(res => {
+        let _data = res.data;
+        if (_data.length > 0) {
+          for (let i = 0; i < _data.length; i++) {
+            _data[i].act = false;
+          }
+        }
+        setTimeout(() => {
+          _this.goodslist = _data;
+        }, 200);
+      });
+    },
     //点击数列某条数据
     handitem(obj, ind) {
-      console.log("obj:", obj);
-      this.options[ind].act = !this.options[ind].act;
-      if (this.options[ind].act) {
+      this.goodslist[ind].act = !this.goodslist[ind].act;
+      if (this.goodslist[ind].act) {
         this.actlist.push(obj);
       } else {
         for (let i in this.actlist) {
@@ -127,21 +92,26 @@ export default {
           }
         }
       }
-      console.log("actlist:", this.actlist);
     },
-    //点击开门补货 开始补货
-    startadd() {
-      console.log("startadd");
-    },
-    //点击补货完成 完成补货
-    endadd() {
-      console.log("endadd:");
+    handbuton(val) {
+      let _url = val == 1 ? "replenish" : "replenish/complete",
+        arr = [];
+      for (let i in this.actlist) {
+        let obj = {};
+        obj.channelId = this.actlist[i].channelId;
+        obj.channelNo = this.actlist[i].channelNo;
+        obj.equipNo = this.actlist[i].equipNO;
+        arr.push(obj);
+      }
+      this.$http.post(_url, arr).then(res => {
+        Toast(res.data);
+      });
     }
   },
   created() {
     if (this.$route.query && this.$route.query.id) {
       this.repdata = this.$route.query;
-      this.repdata.sbh = "43278998741389";
+      this.getdetails(this.$route.query.id);
     }
   }
 };
@@ -152,7 +122,7 @@ export default {
   width: 100%;
   height: 100%;
   background: #eee;
-  a{
+  a {
     text-decoration: none;
   }
   .addtop {
@@ -171,8 +141,8 @@ export default {
         height: 40px;
         padding: 10px;
       }
-      span{
-        box-shadow:0px -18px  #fea34a inset;
+      span {
+        box-shadow: 0px -18px #fea34a inset;
       }
     }
     .top2 {
@@ -230,20 +200,26 @@ export default {
       }
     }
   }
-  .mint-tabbar {
+  .ad_footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     height: 100px;
-    .mint-tab-item-label {
-      height: 100%;
+    & > div {
+      width: 50%;
+      height: 100px;
       line-height: 100px;
+      text-align: center;
+      float: left;
       font-size: 36px;
-      font-family: PingFang-SC-Bold;
-      font-weight: bold;
-      color: rgba(67, 67, 67, 1);
+      font-family: "PingFang-SC-Bold";
+      color: #434343;
     }
-    .mint-tab-item:nth-child(1) {
+    div:nth-child(1) {
       background: #fff1a1;
     }
-    .mint-tab-item:nth-child(2) {
+    div:nth-child(2) {
       background: #fdd808;
     }
   }

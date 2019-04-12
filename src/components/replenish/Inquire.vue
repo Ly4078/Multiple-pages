@@ -71,9 +71,9 @@ export default {
     }
   },
   created() {
-    this.getcode();
-    // let code = "061oeIZD1Jwbd60Tu30E1UTUZD1oeIZp";
-    // this.inquirestatus(code);
+    // this.getcode();
+    let code = "071xd0GT1oM1551RGRET1FtkGT1xd0GX";
+    this.inquirestatus(code);
   }
 };
 </script>
