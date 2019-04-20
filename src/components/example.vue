@@ -1,6 +1,6 @@
 <template>
   <div class="example">
-    <div class="parbox" v-show="status == -1">
+    <div class="parbox" v-show="status == 0">
       <mt-field label="用户名：" placeholder="请输入用户名" v-model="apply.trueName"></mt-field>
       <mt-field label="手机号：" placeholder="请输入手机号" type="number" v-model="apply.username"></mt-field>
       <mt-button type="primary" @click="handapply">申请</mt-button>
@@ -39,7 +39,6 @@
       <mt-button v-show="equiplist.length>0" type="primary" @click="handfirst">初次布货</mt-button>
       <mt-button v-show="equiplist.length>0" type="primary" @click="handdoor">开门补货</mt-button>
     </div>
-    <h1>{{status==0?'账户已停用':status==4?'账户正在申请中':''}}</h1>
   </div>
 </template>
 <script>
@@ -47,6 +46,7 @@ import Vue from "vue";
 import { Field } from "mint-ui";
 import { Button } from "mint-ui";
 import { MessageBox } from "mint-ui";
+import { Indicator } from "mint-ui";
 Vue.component(Button.name, Button);
 Vue.component(Field.name, Field);
 import { Toast } from "mint-ui";
@@ -54,7 +54,8 @@ export default {
   name: "goods_list",
   data() {
     return {
-      status: 1,
+      status: "",
+      isopen: true,
       actequipNo: "",
       apply: {
         trueName: "",
@@ -87,7 +88,7 @@ export default {
     //查询当前用户权限
     queryPermission(code) {
       this.$http.get("operation/login/" + code).then(res => {
-        //   -1 可申请   0：停用    1：已经申请成功  4：申请中
+        //   0 未申请  1：已经申请成功
         this.status = res.data.status;
         localStorage.setItem("TOKEN", res.data.token);
       });
@@ -107,11 +108,12 @@ export default {
         this.apply.username = "";
         return;
       }
+      Indicator.open();
       this.$http.post("operation/apply", this.apply).then(res => {
         console.log("res:", res);
+        Indicator.close();
         if (res.status == 200) {
-          MessageBox("提示", res.data);
-          this.status = 4;
+          MessageBox("提示", "申请提交成功，请等待审核");
         }
       });
     },
@@ -121,7 +123,9 @@ export default {
         Toast("请输入设备号");
       } else {
         let _url = "operation/openCheck?equipNo=" + this.device.equipNo;
+        Indicator.open();
         this.$http.get(_url).then(res => {
+          Indicator.close();
           if (res.data.length > 0) {
             let _datalist = res.data;
             for (let i in _datalist) {
@@ -173,35 +177,47 @@ export default {
     },
     //初次布货
     handfirst() {
-      if (this.actequipNo) {
-        this.$http.post("operation/first/"+this.actequipNo).then(res => {
-          MessageBox("提示", res.data);
-        });
-      } else {
-        MessageBox("提示", "请先选中一个设备");
+      if (this.isopen) {
+        if (this.actequipNo) {
+          this.isopen = false;
+          Indicator.open("加载中...");
+          this.$http.post("operation/first/" + this.actequipNo).then(res => {
+            this.isopen = true;
+            Indicator.close();
+            MessageBox("提示", res.data);
+          });
+        } else {
+          MessageBox("提示", "请先选中一个设备");
+        }
       }
     },
     //开门
     handdoor(equipNo) {
       let arr = [];
       console.log("actlist321:", this.actlist, this.actlist.length);
-      if (this.actequipNo) {
-        if (this.actlist.length > 0) {
-          for (let i in this.actlist) {
-            let _obj = {};
-            (_obj.channelId = this.actlist[i].channelId),
-              (_obj.channelNo = this.actlist[i].channelNo),
-              (_obj.equipNo = this.actequipNo);
-            arr.push(_obj);
+      if (this.isopen) {
+        if (this.actequipNo) {
+          if (this.actlist.length > 0) {
+            for (let i in this.actlist) {
+              let _obj = {};
+              (_obj.channelId = this.actlist[i].channelId),
+                (_obj.channelNo = this.actlist[i].channelNo),
+                (_obj.equipNo = this.actequipNo);
+              arr.push(_obj);
+            }
+            Indicator.open("加载中...");
+            this.isopen = false;
+            this.$http.post("operation/open", arr).then(res => {
+              Indicator.close();
+              this.isopen = true;
+              MessageBox("提示", res.data);
+            });
+          } else {
+            MessageBox("提示", "请选择货道");
           }
-          this.$http.post("operation/open", arr).then(res => {
-            MessageBox("提示", res.data);
-          });
         } else {
-          MessageBox("提示", "请选择货道");
+          MessageBox("提示", "请先选中一个设备");
         }
-      } else {
-        MessageBox("提示", "请先选中一个设备");
       }
       if (!this.device.channelNo) {
         Toast("请输入货道号");
@@ -212,6 +228,7 @@ export default {
   created() {
     let astr = window.location.href,
       aobj = {};
+
     if (astr.indexOf("code") != -1) {
       let anum = astr.indexOf("?");
       astr = astr.substr(anum + 1);

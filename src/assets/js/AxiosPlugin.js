@@ -69,13 +69,8 @@ Axios.interceptors.response.use(
         duration: 5000
       });
     } else if (error.response.status === 400) {
-      // Toast({
-      //   message: error.response.data,
-      //   position: 'bottom',
-      //   duration: 5000
-      // });
       MessageBox.alert(
-        error.response.data+"，请联系客服027-83598166"
+        error.response.data+".请联系客服027-83598166"
       ).then(action => {
         window.location.href = "tel:027-83598166";
       });
@@ -85,7 +80,6 @@ Axios.interceptors.response.use(
         position: 'bottom',
         duration: 5000
       });
-      // Promise.reject("系统异常，稍后重试");
     } else {
       Toast({
         message: error.response.data,

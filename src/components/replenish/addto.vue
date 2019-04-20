@@ -38,7 +38,8 @@ export default {
   name: "addto",
   data() {
     return {
-      roomNo:"",
+      isopen: true,
+      roomNo: "",
       repdata: {},
       actlist: [],
       goodslist: []
@@ -88,31 +89,35 @@ export default {
     handbuton(val) {
       let _url = val == 1 ? "replenish" : "replenish/complete",
         arr = [];
-      Indicator.open({
-        text: "加载中...",
-        spinnerType: "fading-circle"
-      });
-      for (let i in this.actlist) {
-        let obj = {};
-        obj.channelId = this.actlist[i].channelId;
-        obj.channelNo = this.actlist[i].channelNo;
-        obj.equipNo = this.actlist[i].equipNO;
-        arr.push(obj);
-      }
-      this.$http.post(_url, arr).then(res => {
-        Indicator.close();
-        alert(JSON.stringify(res))
-        Toast(res.data);
-        if(val ==2){
-          this.getdetails();
+      if (this.isopen) {
+        Indicator.open({
+          text: "加载中...",
+          spinnerType: "fading-circle"
+        });
+        for (let i in this.actlist) {
+          let obj = {};
+          obj.channelId = this.actlist[i].channelId;
+          obj.channelNo = this.actlist[i].channelNo;
+          obj.equipNo = this.actlist[i].equipNO;
+          arr.push(obj);
         }
-      });
+        this.isopen = false;
+        this.$http.post(_url, arr).then(res => {
+          Indicator.close();
+          this.isopen = true;
+          alert(JSON.stringify(res));
+          Toast(res.data);
+          if (val == 2) {
+            this.getdetails();
+          }
+        });
+      }
     }
   },
   created() {
     if (this.$route.query && this.$route.query.id) {
       this.repdata = this.$route.query;
-      this.roomNo=this.$route.query.id;
+      this.roomNo = this.$route.query.id;
       this.getdetails();
     }
   }

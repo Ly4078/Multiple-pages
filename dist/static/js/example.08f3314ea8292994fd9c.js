@@ -1,5 +1,16 @@
 webpackJsonp([3],{
 
+/***/ 106:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"example"},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == 0),expression:"status == 0"}],staticClass:"parbox"},[_c('mt-field',{attrs:{"label":"用户名：","placeholder":"请输入用户名"},model:{value:(_vm.apply.trueName),callback:function ($$v) {_vm.$set(_vm.apply, "trueName", $$v)},expression:"apply.trueName"}}),_vm._v(" "),_c('mt-field',{attrs:{"label":"手机号：","placeholder":"请输入手机号","type":"number"},model:{value:(_vm.apply.username),callback:function ($$v) {_vm.$set(_vm.apply, "username", $$v)},expression:"apply.username"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.handapply}},[_vm._v("申请")])],1),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == 1),expression:"status == 1"}],staticClass:"parbox"},[_c('p',{staticClass:"prompt"},[_vm._v("提示：请输入正确的8位设备编号")]),_vm._v(" "),_c('mt-field',{attrs:{"label":"设备号：","placeholder":"请输入8位设备号","type":"number"},model:{value:(_vm.device.equipNo),callback:function ($$v) {_vm.$set(_vm.device, "equipNo", $$v)},expression:"device.equipNo"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.inquire}},[_vm._v("设备查询")]),_vm._v(" "),_vm._l((_vm.equiplist),function(item,index){return _c('div',{key:item.equipNo,staticClass:"equipul",class:_vm.actequipNo==item.equipNo?'actequipul':'',on:{"click":function($event){return _vm.handli(item)}}},[_c('p',[_vm._v("酒店名称："+_vm._s(item.hotelName))]),_vm._v(" "),_c('p',[_vm._v("设备编号："+_vm._s(item.equipNo))]),_vm._v(" "),_c('ul',{directives:[{name:"show",rawName:"v-show",value:(_vm.actequipNo==item.equipNo),expression:"actequipNo==item.equipNo"}],staticClass:"addcont"},_vm._l((item.channelList),function(items,indexs){return _c('li',{key:items.channelId,on:{"click":function($event){return _vm.handitem(items,index,indexs)}}},[_c('img',{directives:[{name:"show",rawName:"v-show",value:(items.act),expression:"items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(18),"alt":""}}),_vm._v(" "),_c('img',{directives:[{name:"show",rawName:"v-show",value:(!items.act),expression:"!items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(17),"alt":""}}),_vm._v(" "),_c('div',{staticClass:"liright"},[_c('p',{staticClass:"goodsname"},[_c('span',[_vm._v("货道"+_vm._s(items.channelNo))])])])])}),0)])}),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handfirst}},[_vm._v("初次布货")]),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handdoor}},[_vm._v("开门补货")])],2)])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+
 /***/ 17:
 /***/ (function(module, exports) {
 
@@ -64,7 +75,7 @@ module.exports = __webpack_require__.p + "static/img/yixz_icon.7fd3733.png";
 //
 //
 //
-//
+
 
 
 
@@ -77,7 +88,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
   name: "goods_list",
   data() {
     return {
-      status: 1,
+      status: "",
+      isopen: true,
       actequipNo: "",
       apply: {
         trueName: "",
@@ -110,7 +122,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
     //查询当前用户权限
     queryPermission(code) {
       this.$http.get("operation/login/" + code).then(res => {
-        //   -1 可申请   0：停用    1：已经申请成功  4：申请中
+        //   0 未申请  1：已经申请成功
         this.status = res.data.status;
         localStorage.setItem("TOKEN", res.data.token);
       });
@@ -130,11 +142,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
         this.apply.username = "";
         return;
       }
+      __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open();
       this.$http.post("operation/apply", this.apply).then(res => {
         console.log("res:", res);
+        __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
         if (res.status == 200) {
-          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
-          this.status = 4;
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "申请提交成功，请等待审核");
         }
       });
     },
@@ -144,7 +157,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])("请输入设备号");
       } else {
         let _url = "operation/openCheck?equipNo=" + this.device.equipNo;
+        __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open();
         this.$http.get(_url).then(res => {
+          __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
           if (res.data.length > 0) {
             let _datalist = res.data;
             for (let i in _datalist) {
@@ -195,33 +210,45 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
     },
     //初次布货
     handfirst() {
-      if (this.actequipNo) {
-        this.$http.post("operation/first/" + this.actequipNo).then(res => {
-          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
-        });
-      } else {
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请先选中一个设备");
+      if (this.isopen) {
+        if (this.actequipNo) {
+          this.isopen = false;
+          __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open("加载中...");
+          this.$http.post("operation/first/" + this.actequipNo).then(res => {
+            this.isopen = true;
+            __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
+          });
+        } else {
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请先选中一个设备");
+        }
       }
     },
     //开门
     handdoor(equipNo) {
       let arr = [];
       console.log("actlist321:", this.actlist, this.actlist.length);
-      if (this.actequipNo) {
-        if (this.actlist.length > 0) {
-          for (let i in this.actlist) {
-            let _obj = {};
-            _obj.channelId = this.actlist[i].channelId, _obj.channelNo = this.actlist[i].channelNo, _obj.equipNo = this.actequipNo;
-            arr.push(_obj);
+      if (this.isopen) {
+        if (this.actequipNo) {
+          if (this.actlist.length > 0) {
+            for (let i in this.actlist) {
+              let _obj = {};
+              _obj.channelId = this.actlist[i].channelId, _obj.channelNo = this.actlist[i].channelNo, _obj.equipNo = this.actequipNo;
+              arr.push(_obj);
+            }
+            __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open("加载中...");
+            this.isopen = false;
+            this.$http.post("operation/open", arr).then(res => {
+              __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
+              this.isopen = true;
+              __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
+            });
+          } else {
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请选择货道");
           }
-          this.$http.post("operation/open", arr).then(res => {
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
-          });
         } else {
-          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请选择货道");
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请先选中一个设备");
         }
-      } else {
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请先选中一个设备");
       }
       if (!this.device.channelNo) {
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])("请输入货道号");
@@ -232,6 +259,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
   created() {
     let astr = window.location.href,
         aobj = {};
+
     if (astr.indexOf("code") != -1) {
       let anum = astr.indexOf("?");
       astr = astr.substr(anum + 1);
@@ -342,12 +370,7 @@ Axios.interceptors.response.use(res => {
       duration: 5000
     });
   } else if (error.response.status === 400) {
-    // Toast({
-    //   message: error.response.data,
-    //   position: 'bottom',
-    //   duration: 5000
-    // });
-    __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert(error.response.data + "，请联系客服027-83598166").then(action => {
+    __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert(error.response.data + ".请联系客服027-83598166").then(action => {
       window.location.href = "tel:027-83598166";
     });
   } else if (error.response.status === 500) {
@@ -356,7 +379,6 @@ Axios.interceptors.response.use(res => {
       position: 'bottom',
       duration: 5000
     });
-    // Promise.reject("系统异常，稍后重试");
   } else {
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])({
       message: error.response.data,
@@ -552,7 +574,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 
 /***/ }),
 
-/***/ 75:
+/***/ 81:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -565,9 +587,9 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__ = __webpack_require__(24);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_353343fa_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_c82fc582_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(106);
 function injectStyle (ssrContext) {
-  __webpack_require__(75)
+  __webpack_require__(81)
 }
 var normalizeComponent = __webpack_require__(8)
 /* script */
@@ -585,7 +607,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_353343fa_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_c82fc582_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -606,18 +628,7 @@ var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
-/***/ }),
-
-/***/ 99:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"example"},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == -1),expression:"status == -1"}],staticClass:"parbox"},[_c('mt-field',{attrs:{"label":"用户名：","placeholder":"请输入用户名"},model:{value:(_vm.apply.trueName),callback:function ($$v) {_vm.$set(_vm.apply, "trueName", $$v)},expression:"apply.trueName"}}),_vm._v(" "),_c('mt-field',{attrs:{"label":"手机号：","placeholder":"请输入手机号","type":"number"},model:{value:(_vm.apply.username),callback:function ($$v) {_vm.$set(_vm.apply, "username", $$v)},expression:"apply.username"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.handapply}},[_vm._v("申请")])],1),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == 1),expression:"status == 1"}],staticClass:"parbox"},[_c('p',{staticClass:"prompt"},[_vm._v("提示：请输入正确的8位设备编号")]),_vm._v(" "),_c('mt-field',{attrs:{"label":"设备号：","placeholder":"请输入8位设备号","type":"number"},model:{value:(_vm.device.equipNo),callback:function ($$v) {_vm.$set(_vm.device, "equipNo", $$v)},expression:"device.equipNo"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.inquire}},[_vm._v("设备查询")]),_vm._v(" "),_vm._l((_vm.equiplist),function(item,index){return _c('div',{key:item.equipNo,staticClass:"equipul",class:_vm.actequipNo==item.equipNo?'actequipul':'',on:{"click":function($event){return _vm.handli(item)}}},[_c('p',[_vm._v("酒店名称："+_vm._s(item.hotelName))]),_vm._v(" "),_c('p',[_vm._v("设备编号："+_vm._s(item.equipNo))]),_vm._v(" "),_c('ul',{directives:[{name:"show",rawName:"v-show",value:(_vm.actequipNo==item.equipNo),expression:"actequipNo==item.equipNo"}],staticClass:"addcont"},_vm._l((item.channelList),function(items,indexs){return _c('li',{key:items.channelId,on:{"click":function($event){return _vm.handitem(items,index,indexs)}}},[_c('img',{directives:[{name:"show",rawName:"v-show",value:(items.act),expression:"items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(18),"alt":""}}),_vm._v(" "),_c('img',{directives:[{name:"show",rawName:"v-show",value:(!items.act),expression:"!items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(17),"alt":""}}),_vm._v(" "),_c('div',{staticClass:"liright"},[_c('p',{staticClass:"goodsname"},[_c('span',[_vm._v("货道"+_vm._s(items.channelNo))])])])])}),0)])}),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handfirst}},[_vm._v("初次布货")]),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handdoor}},[_vm._v("开门补货")])],2),_vm._v(" "),_c('h1',[_vm._v(_vm._s(_vm.status==0?'账户已停用':_vm.status==4?'账户正在申请中':''))])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
 /***/ })
 
 },[70]);
-//# sourceMappingURL=example.addfdc5d4dbd1f2107ac.js.map
+//# sourceMappingURL=example.08f3314ea8292994fd9c.js.map

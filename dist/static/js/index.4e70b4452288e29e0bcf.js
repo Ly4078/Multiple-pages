@@ -1,16 +1,5 @@
 webpackJsonp([2],{
 
-/***/ 101:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('router-view')],1)}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
-
 /***/ 25:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -83,6 +72,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
   name: "goods_list",
   data() {
     return {
+      isopen: true,
       ispay: false,
       amout: 0,
       goodsNum: 0,
@@ -97,6 +87,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
   },
   watch: {
     selected: function () {
+      this.isopen = true;
       if (this.selected == 2) {
         this.settlement();
       }
@@ -181,41 +172,44 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
       let _Url = "",
           _parms = {},
           _list = [];
-      this.selected = 1;
-      __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open({
-        text: "结算中...",
-        spinnerType: "fading-circle"
-      });
-      if (this.wxback && this.wxback.code) {
-        _Url = "yub/xw/" + this.wxback.code;
-      } else {
-        _Url = "yub/ila";
-      }
-      const _date = new Date();
-      let _md5 = this.$md5(this.amout.toFixed(2).toString() + "liaoyibi" + _date.getTime().toString());
-      for (let i in this.actlist) {
-        _list.push(this.actlist[i].channelId);
-      }
-      _parms = {
-        channelIdList: _list,
-        signature: _md5,
-        timestamp: _date.getTime().toString()
-      };
-      this.$http.post(_Url, _parms).then(res => {
-        __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
-        if (this.playtype == 2 || this.playtype == 3) {
-          //支付宝环境或其它环境
-          this.html = res.data;
-          var form = res.data;
-          const div = document.createElement("div");
-          div.innerHTML = form; //此处form就是后台返回接收到的数据
-          document.body.appendChild(div);
-          document.forms[0].submit();
+      if (this.isopen) {
+        this.selected = 1;
+        __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open({
+          text: "结算中...",
+          spinnerType: "fading-circle"
+        });
+        if (this.wxback && this.wxback.code) {
+          _Url = "yub/xw/" + this.wxback.code;
         } else {
-          //微信环境
-          this.wxpay(res.data); //调取支付
+          _Url = "yub/ila";
         }
-      });
+        const _date = new Date();
+        let _md5 = this.$md5(this.amout.toFixed(2).toString() + "liaoyibi" + _date.getTime().toString());
+        for (let i in this.actlist) {
+          _list.push(this.actlist[i].channelId);
+        }
+        _parms = {
+          channelIdList: _list,
+          signature: _md5,
+          timestamp: _date.getTime().toString()
+        };
+        this.$http.post(_Url, _parms).then(res => {
+          __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
+          this.isopen = true;
+          if (this.playtype == 2 || this.playtype == 3) {
+            //支付宝环境或其它环境
+            this.html = res.data;
+            var form = res.data;
+            const div = document.createElement("div");
+            div.innerHTML = form; //此处form就是后台返回接收到的数据
+            document.body.appendChild(div);
+            document.forms[0].submit();
+          } else {
+            //微信环境
+            this.wxpay(res.data); //调取支付
+          }
+        });
+      }
     },
     wxpay(data) {
       var vm = this;
@@ -412,12 +406,7 @@ Axios.interceptors.response.use(res => {
       duration: 5000
     });
   } else if (error.response.status === 400) {
-    // Toast({
-    //   message: error.response.data,
-    //   position: 'bottom',
-    //   duration: 5000
-    // });
-    __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert(error.response.data + "，请联系客服027-83598166").then(action => {
+    __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert(error.response.data + ".请联系客服027-83598166").then(action => {
       window.location.href = "tel:027-83598166";
     });
   } else if (error.response.status === 500) {
@@ -426,7 +415,6 @@ Axios.interceptors.response.use(res => {
       position: 'bottom',
       duration: 5000
     });
-    // Promise.reject("系统异常，稍后重试");
   } else {
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])({
       message: error.response.data,
@@ -502,9 +490,9 @@ const mutations = {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(31);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_49885bcc_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_49885bcc_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(99);
 function injectStyle (ssrContext) {
-  __webpack_require__(77)
+  __webpack_require__(75)
 }
 var normalizeComponent = __webpack_require__(8)
 /* script */
@@ -634,7 +622,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 
 /***/ }),
 
-/***/ 77:
+/***/ 75:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -668,7 +656,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACt
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_goods_list_vue__ = __webpack_require__(25);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_18ee9ecc_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_goods_list_vue__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_28da8602_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_goods_list_vue__ = __webpack_require__(97);
 function injectStyle (ssrContext) {
   __webpack_require__(73)
 }
@@ -688,7 +676,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_goods_list_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_18ee9ecc_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_goods_list_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_28da8602_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_goods_list_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -709,7 +697,18 @@ var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
+/***/ }),
+
+/***/ 99:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('router-view')],1)}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
 /***/ })
 
 },[71]);
-//# sourceMappingURL=index.6df90aa02b353bae584b.js.map
+//# sourceMappingURL=index.4e70b4452288e29e0bcf.js.map

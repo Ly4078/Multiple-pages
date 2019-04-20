@@ -1,6 +1,6 @@
 <template>
   <div class="replenish_list">
-    <ul class="bmbox" v-show="status==-1">
+    <ul class="bmbox" v-show="status==0">
       <li>提示：酒店补货员需要申请后才可使用</li>
       <li>
         <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="trem.username"></mt-field>
@@ -10,8 +10,6 @@
       </li>
     </ul>
     <mt-button type="primary" @click="handleapply" v-show="status==-1">申请补货员</mt-button>
-    <div class="load" v-show="status==4">申请审核中...</div>
-    <div class="load" v-show="status==0">该帐户已停用</div>
     <div class="reptop" v-show="status==1">
       <div class="reptitle">
         <span>补货清单</span>
@@ -50,6 +48,7 @@ import { Toast } from "mint-ui";
 import { Field } from "mint-ui";
 import { Button } from "mint-ui";
 import { MessageBox } from "mint-ui";
+import { Indicator } from "mint-ui";
 Vue.component(Field.name, Field);
 Vue.component(Button.name, Button);
 export default {
@@ -84,11 +83,8 @@ export default {
     getlogin(code) {
       const _this = this;
       this.$http.get("replenish/login/" + code).then(res => {
-        console.log("login_res:", res);
-        // alert(JSON.stringify(res));
         this.status = res.data.status;
         localStorage.setItem("TOKEN", res.data.token);
-
         if (res.data.status == 1) {
           this.getreplenish();
         }
@@ -147,9 +143,10 @@ export default {
             trueName: this.trem.trueName,
             username: this.trem.username
           };
+          Indicator.open();
           this.$http.post("replenish/apply", _parms).then(res => {
-            alert(JSON.stringify(res))
             if (res.status == 200) {
+              Indicator.close();
               this.status = 4;
               MessageBox("提示", "申请成功，请等待审核结果");
             }

@@ -63,6 +63,7 @@ export default {
   name: "goods_list",
   data() {
     return {
+      isopen: true,
       ispay: false,
       amout: 0,
       goodsNum: 0,
@@ -77,6 +78,7 @@ export default {
   },
   watch: {
     selected: function() {
+       this.isopen=true;
       if (this.selected == 2) {
         this.settlement();
       }
@@ -165,45 +167,48 @@ export default {
       let _Url = "",
         _parms = {},
         _list = [];
-      this.selected = 1;
-      Indicator.open({
-        text: "结算中...",
-        spinnerType: "fading-circle"
-      });
-      if (this.wxback && this.wxback.code) {
-        _Url = "yub/xw/" + this.wxback.code;
-      } else {
-        _Url = "yub/ila";
-      }
-      const _date = new Date();
-      let _md5 = this.$md5(
-        this.amout.toFixed(2).toString() +
-          "liaoyibi" +
-          _date.getTime().toString()
-      );
-      for (let i in this.actlist) {
-        _list.push(this.actlist[i].channelId);
-      }
-      _parms = {
-        channelIdList: _list,
-        signature: _md5,
-        timestamp: _date.getTime().toString()
-      };
-      this.$http.post(_Url, _parms).then(res => {
-        Indicator.close();
-        if (this.playtype == 2 || this.playtype == 3) {
-          //支付宝环境或其它环境
-          this.html = res.data;
-          var form = res.data;
-          const div = document.createElement("div");
-          div.innerHTML = form; //此处form就是后台返回接收到的数据
-          document.body.appendChild(div);
-          document.forms[0].submit();
+      if (this.isopen) {
+        this.selected = 1;
+        Indicator.open({
+          text: "结算中...",
+          spinnerType: "fading-circle"
+        });
+        if (this.wxback && this.wxback.code) {
+          _Url = "yub/xw/" + this.wxback.code;
         } else {
-          //微信环境
-          this.wxpay(res.data); //调取支付
+          _Url = "yub/ila";
         }
-      });
+        const _date = new Date();
+        let _md5 = this.$md5(
+          this.amout.toFixed(2).toString() +
+            "liaoyibi" +
+            _date.getTime().toString()
+        );
+        for (let i in this.actlist) {
+          _list.push(this.actlist[i].channelId);
+        }
+        _parms = {
+          channelIdList: _list,
+          signature: _md5,
+          timestamp: _date.getTime().toString()
+        };
+        this.$http.post(_Url, _parms).then(res => {
+          Indicator.close();
+          this.isopen=true;
+          if (this.playtype == 2 || this.playtype == 3) {
+            //支付宝环境或其它环境
+            this.html = res.data;
+            var form = res.data;
+            const div = document.createElement("div");
+            div.innerHTML = form; //此处form就是后台返回接收到的数据
+            document.body.appendChild(div);
+            document.forms[0].submit();
+          } else {
+            //微信环境
+            this.wxpay(res.data); //调取支付
+          }
+        });
+      }
     },
     wxpay(data) {
       var vm = this;
@@ -242,7 +247,7 @@ export default {
         },
         function(res) {
           // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-          alert(JSON.stringify(res))
+          alert(JSON.stringify(res));
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // vm.$router.push("/successPay");
             vm.ispay = true;
@@ -276,14 +281,14 @@ export default {
         // alert("其他浏览器");
       }
     },
-    handmodel(){
-      this.ispay= false;
-      this.amout= 0;
-      this.goodsNum= 0;
-      this.actInd= "";
-      this.selected= "";
-      this.actlist= [];
-      for(let i in this.getlist){
+    handmodel() {
+      this.ispay = false;
+      this.amout = 0;
+      this.goodsNum = 0;
+      this.actInd = "";
+      this.selected = "";
+      this.actlist = [];
+      for (let i in this.getlist) {
         this.goodslist[i].actInd = false;
       }
     }
@@ -305,9 +310,10 @@ export default {
       this.getlist(aobj.state);
     } else {
       let url = document.location.toString();
-      let arrUrl = url.split("?"),ujh=0;
-      if(arrUrl[1].indexOf("#")!=-1){
-         ujh = arrUrl[1].indexOf("#");
+      let arrUrl = url.split("?"),
+        ujh = 0;
+      if (arrUrl[1].indexOf("#") != -1) {
+        ujh = arrUrl[1].indexOf("#");
       }
       const _code = arrUrl[1].substr(0, ujh);
       this.getlist(_code);

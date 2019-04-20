@@ -13,3 +13,23 @@ legend { color:#000; }
 fieldset, img { border:0; }
 button, input, select, textarea { font-size:100%; }
 table { border-collapse:collapse; border-spacing:0; }
+
+
+/*  */
+.mint-msgbox-btns{
+    height: 70px!important;
+    line-height: 70px!important;
+}
+.mint-msgbox-content{
+    height: 40px!important;
+    line-height: 40px!important;
+}
+.mint-msgbox-title{
+    font-size: 32px!important;
+}
+.mint-msgbox-message, .mint-msgbox-btn{
+    font-size: 30px!important;
+}
+.mintui-field-error{
+    font-size: 40px!important;
+}
