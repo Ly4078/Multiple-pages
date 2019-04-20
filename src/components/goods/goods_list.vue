@@ -264,7 +264,7 @@ export default {
       if (/MicroMessenger/.test(window.navigator.userAgent)) {
         this.playtype = 1;
         window.location.href =
-          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://2434481w3x.wicp.vip/mobile/index.html&response_type=code&scope=snsapi_base&state=" +
+          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/index.html&response_type=code&scope=snsapi_base&state=" +
           _para +
           "#wechat_redirect";
         // alert("微信客户端");

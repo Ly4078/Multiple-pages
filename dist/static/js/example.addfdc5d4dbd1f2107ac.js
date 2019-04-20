@@ -1,16 +1,5 @@
 webpackJsonp([3],{
 
-/***/ 105:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"example"},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == -1),expression:"status == -1"}],staticClass:"parbox"},[_c('mt-field',{attrs:{"label":"用户名：","placeholder":"请输入用户名"},model:{value:(_vm.apply.trueName),callback:function ($$v) {_vm.$set(_vm.apply, "trueName", $$v)},expression:"apply.trueName"}}),_vm._v(" "),_c('mt-field',{attrs:{"label":"手机号：","placeholder":"请输入手机号","type":"number"},model:{value:(_vm.apply.username),callback:function ($$v) {_vm.$set(_vm.apply, "username", $$v)},expression:"apply.username"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.handapply}},[_vm._v("申请")])],1),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == 1),expression:"status == 1"}],staticClass:"parbox"},[_c('p',{staticClass:"prompt"},[_vm._v("提示：请输入正确的8位设备编号")]),_vm._v(" "),_c('mt-field',{attrs:{"label":"设备号：","placeholder":"请输入8位设备号","type":"number"},model:{value:(_vm.device.equipNo),callback:function ($$v) {_vm.$set(_vm.device, "equipNo", $$v)},expression:"device.equipNo"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.inquire}},[_vm._v("设备查询")]),_vm._v(" "),_vm._l((_vm.equiplist),function(item,index){return _c('div',{key:item.equipNo,staticClass:"equipul",class:_vm.actequipNo==item.equipNo?'actequipul':'',on:{"click":function($event){return _vm.handli(item)}}},[_c('p',[_vm._v("酒店名称："+_vm._s(item.hotelName))]),_vm._v(" "),_c('p',[_vm._v("设备编号："+_vm._s(item.equipNo))]),_vm._v(" "),_c('ul',{directives:[{name:"show",rawName:"v-show",value:(_vm.actequipNo==item.equipNo),expression:"actequipNo==item.equipNo"}],staticClass:"addcont"},_vm._l((item.channelList),function(items,indexs){return _c('li',{key:items.channelId,on:{"click":function($event){return _vm.handitem(items,index,indexs)}}},[_c('img',{directives:[{name:"show",rawName:"v-show",value:(items.act),expression:"items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(18),"alt":""}}),_vm._v(" "),_c('img',{directives:[{name:"show",rawName:"v-show",value:(!items.act),expression:"!items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(17),"alt":""}}),_vm._v(" "),_c('div',{staticClass:"liright"},[_c('p',{staticClass:"goodsname"},[_c('span',[_vm._v("货道"+_vm._s(items.channelNo))])])])])}),0)])}),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handfirst}},[_vm._v("初次布货")]),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handdoor}},[_vm._v("开门补货")])],2),_vm._v(" "),_c('h1',[_vm._v(_vm._s(_vm.status==0?'账户已停用':_vm.status==4?'账户正在申请中':''))])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
-
 /***/ 17:
 /***/ (function(module, exports) {
 
@@ -100,40 +89,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
       },
       wxback: {},
       actlist: [],
-      equiplist: [],
-      equiplist2: [{
-        channelList: [{
-          act: false,
-          channelId: "1-111",
-          channelNo: "11-11"
-        }, {
-          act: false,
-          channelId: "1-222",
-          channelNo: "11-22"
-        }, {
-          act: false,
-          channelId: "1-333",
-          channelNo: "11-33"
-        }],
-        equipNo: "158745986475216",
-        hotelName: "比翼鸟科技有限公司"
-      }, {
-        channelList: [{
-          act: false,
-          channelId: "2-222",
-          channelNo: "22-22"
-        }],
-        equipNo: "222222222",
-        hotelName: " 酒店2"
-      }, {
-        channelList: [{
-          act: false,
-          channelId: "3-333",
-          channelNo: " 33-33"
-        }],
-        equipNo: "3333333333",
-        hotelName: "酒店3"
-      }]
+      equiplist: []
     };
   },
   watch: {
@@ -249,8 +205,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
     },
     //开门
     handdoor(equipNo) {
-      let arr = [],
-          _parms = {};
+      let arr = [];
       console.log("actlist321:", this.actlist, this.actlist.length);
       if (this.actequipNo) {
         if (this.actlist.length > 0) {
@@ -259,10 +214,6 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
             _obj.channelId = this.actlist[i].channelId, _obj.channelNo = this.actlist[i].channelNo, _obj.equipNo = this.actequipNo;
             arr.push(_obj);
           }
-          _parms = {
-            list: arr
-          };
-          console.log("arr:", arr);
           this.$http.post("operation/open", arr).then(res => {
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
           });
@@ -276,22 +227,11 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])("请输入货道号");
         return;
       }
-      // let _parms = {
-      //   equipNo: equipNo,
-      //   channelNo: this.device.channelNo
-      // };
-      // this.$http.post("operation/open", _parms).then(res => {
-      //   MessageBox("提示", res.data);
-      // });
     }
   },
   created() {
     let astr = window.location.href,
         aobj = {};
-
-    let code = "001NxoTs0F9keh1gAJWs0NJrTs0NxoTi";
-    this.queryPermission(code);
-    return;
     if (astr.indexOf("code") != -1) {
       let anum = astr.indexOf("?");
       astr = astr.substr(anum + 1);
@@ -303,7 +243,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
       this.wxback = aobj;
       this.queryPermission(aobj.code);
     } else {
-      window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://2434481w3x.wicp.vip/mobile/example.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
+      window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/example.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
     }
   }
 });
@@ -490,9 +430,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__ = __webpack_require__(30);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_2e3e19f1_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_2e3e19f1_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(98);
 function injectStyle (ssrContext) {
-  __webpack_require__(73)
+  __webpack_require__(74)
 }
 var normalizeComponent = __webpack_require__(8)
 /* script */
@@ -605,14 +545,14 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 
 /***/ }),
 
-/***/ 73:
+/***/ 74:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 80:
+/***/ 75:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -625,9 +565,9 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__ = __webpack_require__(24);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_f8a078f8_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_353343fa_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(99);
 function injectStyle (ssrContext) {
-  __webpack_require__(80)
+  __webpack_require__(75)
 }
 var normalizeComponent = __webpack_require__(8)
 /* script */
@@ -645,7 +585,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_f8a078f8_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_353343fa_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -657,7 +597,7 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 97:
+/***/ 98:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -666,7 +606,18 @@ var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
+/***/ }),
+
+/***/ 99:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"example"},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == -1),expression:"status == -1"}],staticClass:"parbox"},[_c('mt-field',{attrs:{"label":"用户名：","placeholder":"请输入用户名"},model:{value:(_vm.apply.trueName),callback:function ($$v) {_vm.$set(_vm.apply, "trueName", $$v)},expression:"apply.trueName"}}),_vm._v(" "),_c('mt-field',{attrs:{"label":"手机号：","placeholder":"请输入手机号","type":"number"},model:{value:(_vm.apply.username),callback:function ($$v) {_vm.$set(_vm.apply, "username", $$v)},expression:"apply.username"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.handapply}},[_vm._v("申请")])],1),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == 1),expression:"status == 1"}],staticClass:"parbox"},[_c('p',{staticClass:"prompt"},[_vm._v("提示：请输入正确的8位设备编号")]),_vm._v(" "),_c('mt-field',{attrs:{"label":"设备号：","placeholder":"请输入8位设备号","type":"number"},model:{value:(_vm.device.equipNo),callback:function ($$v) {_vm.$set(_vm.device, "equipNo", $$v)},expression:"device.equipNo"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.inquire}},[_vm._v("设备查询")]),_vm._v(" "),_vm._l((_vm.equiplist),function(item,index){return _c('div',{key:item.equipNo,staticClass:"equipul",class:_vm.actequipNo==item.equipNo?'actequipul':'',on:{"click":function($event){return _vm.handli(item)}}},[_c('p',[_vm._v("酒店名称："+_vm._s(item.hotelName))]),_vm._v(" "),_c('p',[_vm._v("设备编号："+_vm._s(item.equipNo))]),_vm._v(" "),_c('ul',{directives:[{name:"show",rawName:"v-show",value:(_vm.actequipNo==item.equipNo),expression:"actequipNo==item.equipNo"}],staticClass:"addcont"},_vm._l((item.channelList),function(items,indexs){return _c('li',{key:items.channelId,on:{"click":function($event){return _vm.handitem(items,index,indexs)}}},[_c('img',{directives:[{name:"show",rawName:"v-show",value:(items.act),expression:"items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(18),"alt":""}}),_vm._v(" "),_c('img',{directives:[{name:"show",rawName:"v-show",value:(!items.act),expression:"!items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(17),"alt":""}}),_vm._v(" "),_c('div',{staticClass:"liright"},[_c('p',{staticClass:"goodsname"},[_c('span',[_vm._v("货道"+_vm._s(items.channelNo))])])])])}),0)])}),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handfirst}},[_vm._v("初次布货")]),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handdoor}},[_vm._v("开门补货")])],2),_vm._v(" "),_c('h1',[_vm._v(_vm._s(_vm.status==0?'账户已停用':_vm.status==4?'账户正在申请中':''))])])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
 /***/ })
 
 },[70]);
-//# sourceMappingURL=example.7419c99c2e799ffac92a.js.map
+//# sourceMappingURL=example.addfdc5d4dbd1f2107ac.js.map

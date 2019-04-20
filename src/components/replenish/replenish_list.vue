@@ -161,10 +161,6 @@ export default {
   created() {
     let astr = window.location.href,
       aobj = {};
-
-      let code = "001NxoTs0F9keh1gAJWs0NJrTs0NxoTi";
-this.getlogin(code);
-return
     if (astr.indexOf("code") != -1) {
       let anum = astr.indexOf("?");
       astr = astr.substr(anum + 1);
@@ -177,7 +173,7 @@ return
       this.getlogin(aobj.code);
     } else {
       window.location.href =
-        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://2434481w3x.wicp.vip/mobile/replenish.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
+        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/replenish.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
     }
   }
 };

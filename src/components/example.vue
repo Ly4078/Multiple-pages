@@ -66,52 +66,7 @@ export default {
       },
       wxback: {},
       actlist: [],
-      equiplist: [],
-      equiplist2: [
-        {
-          channelList: [
-            {
-              act: false,
-              channelId: "1-111",
-              channelNo: "11-11"
-            },
-            {
-              act: false,
-              channelId: "1-222",
-              channelNo: "11-22"
-            },
-            {
-              act: false,
-              channelId: "1-333",
-              channelNo: "11-33"
-            }
-          ],
-          equipNo: "158745986475216",
-          hotelName: "比翼鸟科技有限公司"
-        },
-        {
-          channelList: [
-            {
-              act: false,
-              channelId: "2-222",
-              channelNo: "22-22"
-            }
-          ],
-          equipNo: "222222222",
-          hotelName: " 酒店2"
-        },
-        {
-          channelList: [
-            {
-              act: false,
-              channelId: "3-333",
-              channelNo: " 33-33"
-            }
-          ],
-          equipNo: "3333333333",
-          hotelName: "酒店3"
-        }
-      ]
+      equiplist: []
     };
   },
   watch: {
@@ -228,8 +183,7 @@ export default {
     },
     //开门
     handdoor(equipNo) {
-      let arr = [],
-        _parms = {};
+      let arr = [];
       console.log("actlist321:", this.actlist, this.actlist.length);
       if (this.actequipNo) {
         if (this.actlist.length > 0) {
@@ -240,10 +194,6 @@ export default {
               (_obj.equipNo = this.actequipNo);
             arr.push(_obj);
           }
-          _parms = {
-            list: arr
-          };
-          console.log("arr:", arr);
           this.$http.post("operation/open", arr).then(res => {
             MessageBox("提示", res.data);
           });
@@ -257,22 +207,11 @@ export default {
         Toast("请输入货道号");
         return;
       }
-      // let _parms = {
-      //   equipNo: equipNo,
-      //   channelNo: this.device.channelNo
-      // };
-      // this.$http.post("operation/open", _parms).then(res => {
-      //   MessageBox("提示", res.data);
-      // });
     }
   },
   created() {
     let astr = window.location.href,
       aobj = {};
-
-    let code = "001NxoTs0F9keh1gAJWs0NJrTs0NxoTi";
-    this.queryPermission(code);
-    return;
     if (astr.indexOf("code") != -1) {
       let anum = astr.indexOf("?");
       astr = astr.substr(anum + 1);
@@ -285,7 +224,7 @@ export default {
       this.queryPermission(aobj.code);
     } else {
       window.location.href =
-        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://2434481w3x.wicp.vip/mobile/example.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
+        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/example.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
     }
   }
 };
