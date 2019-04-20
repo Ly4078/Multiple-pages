@@ -1,6 +1,18 @@
 <template>
   <div class="replenish_list">
-    <div class="reptop">
+    <ul class="bmbox" v-show="status==-1">
+      <li>提示：酒店补货员需要申请后才可使用</li>
+      <li>
+        <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="trem.username"></mt-field>
+      </li>
+      <li>
+        <mt-field label="姓名" placeholder="请输入姓名" v-model="trem.trueName"></mt-field>
+      </li>
+    </ul>
+    <mt-button type="primary" @click="handleapply" v-show="status==-1">申请补货员</mt-button>
+    <div class="load" v-show="status==4">申请审核中...</div>
+    <div class="load" v-show="status==0">该帐户已停用</div>
+    <div class="reptop" v-show="status==1">
       <div class="reptitle">
         <span>补货清单</span>
       </div>
@@ -33,6 +45,13 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
+import { Toast } from "mint-ui";
+import { Field } from "mint-ui";
+import { Button } from "mint-ui";
+import { MessageBox } from "mint-ui";
+Vue.component(Field.name, Field);
+Vue.component(Button.name, Button);
 export default {
   name: "replenish",
   data() {
@@ -40,7 +59,13 @@ export default {
       datalist: [],
       goodsList: [],
       roomList: [],
+      wxback: {},
+      trem: {
+        username: "",
+        trueName: ""
+      },
       hotelId: "",
+      status: "",
       nav: [
         {
           id: 1,
@@ -51,42 +76,37 @@ export default {
           label: "缺货商品"
         }
       ],
-      actnav: 1,
-      msg: "Welcome to Your Vue.js App"
+      actnav: 1
     };
   },
-
   methods: {
-    //获取code
-    getcode() {
-      let str = window.location.href; //取得整个地址栏
-      let num = str.indexOf("?");
-      str = str.substr(num + 1); //取得所有参数   stringvar.substr(start [, length ]
-      let arr = str.split("&"); //各个参数放到数组里
-      let arr2 = arr[0].split("=");
-      this.getreplenish(arr2[1]);
-    },
-    getlogin(){
-      const _this=this;
-      this.$http.get("replenish/login/0110opMs1YrlSl0Zp3Ms1JqBMs10opMd").then((res)=>{
-        console.log("login_res:",res)
-        this.$store.commit('setcount','1');
-        setTimeout(() => {
-          _this.getreplenish();
-        }, 200);
-      })
-    },
-    //查询数据
-    getreplenish(code) {
-      this.$http.get("replenish").then(res => {
-        if (res.status  == 200) {
-        this.hotelId = res.data.hotelId;
-        this.goodsList = res.data.goodsList;
-        this.roomList = res.data.roomList;
-        this.datalist = res.data.roomList;
-        this.$store.commit('sethotelId',res.data.hotelId);
+    //登录
+    getlogin(code) {
+      const _this = this;
+      this.$http.get("replenish/login/" + code).then(res => {
+        console.log("login_res:", res);
+        // alert(JSON.stringify(res));
+        this.status = res.data.status;
+        localStorage.setItem("TOKEN", res.data.token);
+
+        if (res.data.status == 1) {
+          this.getreplenish();
         }
       });
+    },
+    //查询数据
+    getreplenish() {
+      this.$http
+        .get("replenish").then(res => {
+          // alert(JSON.stringify(res));
+          if (res.status == 200) {
+            this.hotelId = res.data.hotelId;
+            this.goodsList = res.data.goodsList;
+            this.roomList = res.data.roomList;
+            this.datalist = res.data.roomList;
+            this.$store.commit("sethotelId", res.data.hotelId);
+          }
+        });
     },
     //切换nav
     handnav(obj) {
@@ -110,15 +130,54 @@ export default {
           query: obj
         });
       }
+    },
+    //申请补货员
+    handleapply() {
+      if (!this.trem.username) {
+        Toast("请输入电话号码");
+      } else if (!this.trem.trueName) {
+        Toast("请输入姓名");
+      } else {
+        const reg = /^1[3|4|5|6|9|7|8][0-9]{9}$/;
+        if (!reg.test(this.trem.username)) {
+          Toast("手机号码输入错误");
+          this.trem.username = "";
+        } else {
+          let _parms = {
+            trueName: this.trem.trueName,
+            username: this.trem.username
+          };
+          this.$http.post("replenish/apply", _parms).then(res => {
+            alert(JSON.stringify(res))
+            if (res.status == 200) {
+              this.status = 4;
+              MessageBox("提示", "申请成功，请等待审核结果");
+            }
+          });
+        }
+      }
     }
   },
   created() {
-    console.log('count:',this.$store.state.count)
-    // this.getlogin();
-    if(this.$store.state.count==1){
-      this.getreplenish();
-    }else{
-      this.getlogin();
+    let astr = window.location.href,
+      aobj = {};
+
+      let code = "001NxoTs0F9keh1gAJWs0NJrTs0NxoTi";
+this.getlogin(code);
+return
+    if (astr.indexOf("code") != -1) {
+      let anum = astr.indexOf("?");
+      astr = astr.substr(anum + 1);
+      let aarr = astr.split("&");
+      for (let i = 0; i < aarr.length; i++) {
+        let barr = aarr[i].split("=");
+        aobj[barr[0]] = barr[1];
+      }
+      this.wxback = aobj;
+      this.getlogin(aobj.code);
+    } else {
+      window.location.href =
+        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://2434481w3x.wicp.vip/mobile/replenish.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
     }
   }
 };
@@ -214,6 +273,36 @@ export default {
         border-right: 1px solid rgba(163, 163, 163, 1);
       }
     }
+  }
+  .bmbox {
+    font-size: 30px;
+    li:nth-child(1) {
+      margin-bottom: 40px;
+    }
+  }
+  a {
+    text-decoration: none;
+    margin: 5px 0;
+  }
+  .mint-cell-title {
+    width: 200px;
+  }
+  .mint-field-core {
+    font-size: 40px !important;
+  }
+  .mint-cell-wrapper {
+    font-size: 40px !important;
+  }
+  .mint-button {
+    font-size: 40px !important;
+    height: auto;
+    margin-top: 50px;
+  }
+  .load {
+    font-size: 30px;
+    text-align: center;
+    color: blue;
+    margin-top: 100px;
   }
 }
 </style>

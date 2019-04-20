@@ -8,7 +8,6 @@
       <div class="top2">设备：{{repdata.equipNo}}</div>
     </div>
     <div class="addcont">
-      <!-- <mt-checklist v-model="value" :options="['选项A', '选项B', '选项C']"></mt-checklist> -->
       <ul>
         <li v-for="(item,index) in goodslist" :key="item.id" @click="handitem(item,index)">
           <img class="selectedimg" v-show="item.act" src="../../assets/image/yixz_icon.png" alt>
@@ -28,26 +27,18 @@
       <div @click="handbuton(1)">开门补货</div>
       <div @click="handbuton(2)">补货完成</div>
     </div>
-    <!-- <mt-tabbar v-model="selected" @click="handbuton"> -->
-    <!-- <mt-tab-item id="1">开门补货</mt-tab-item>
-    <mt-tab-item id="2">补货完成</mt-tab-item>-->
-    <!-- </mt-tabbar> -->
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-// import { Tabbar, TabItem } from "mint-ui";
-// import { Checklist } from "mint-ui";
 import { Toast } from "mint-ui";
-// Vue.component(Checklist.name, Checklist);
-// Vue.component(Tabbar.name, Tabbar);
-// Vue.component(TabItem.name, TabItem);
-var timer = null;
+import { Indicator } from "mint-ui";
 export default {
   name: "addto",
   data() {
     return {
+      roomNo:"",
       repdata: {},
       actlist: [],
       goodslist: []
@@ -66,9 +57,9 @@ export default {
       window.history.back(-1);
     },
     //查询列表数据
-    getdetails(roomNo) {
+    getdetails() {
       const _this = this;
-      this.$http.get("replenish/details/" + roomNo).then(res => {
+      this.$http.get("replenish/details/" + this.roomNo).then(res => {
         let _data = res.data;
         if (_data.length > 0) {
           for (let i = 0; i < _data.length; i++) {
@@ -93,9 +84,14 @@ export default {
         }
       }
     },
+    //开门
     handbuton(val) {
       let _url = val == 1 ? "replenish" : "replenish/complete",
         arr = [];
+      Indicator.open({
+        text: "加载中...",
+        spinnerType: "fading-circle"
+      });
       for (let i in this.actlist) {
         let obj = {};
         obj.channelId = this.actlist[i].channelId;
@@ -104,14 +100,20 @@ export default {
         arr.push(obj);
       }
       this.$http.post(_url, arr).then(res => {
+        Indicator.close();
+        alert(JSON.stringify(res))
         Toast(res.data);
+        if(val ==2){
+          this.getdetails();
+        }
       });
     }
   },
   created() {
     if (this.$route.query && this.$route.query.id) {
       this.repdata = this.$route.query;
-      this.getdetails(this.$route.query.id);
+      this.roomNo=this.$route.query.id;
+      this.getdetails();
     }
   }
 };

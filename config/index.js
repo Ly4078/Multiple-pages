@@ -31,7 +31,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {  //本地代理
       '/api': {
-        target:'http://192.168.88.200:8080/mobile',  //服务器地址
+        // target:'http://22y69q0318.imwork.net/mobile',  //服务器地址
+        // target:'http://dev.byn-kj.com',  //测试服务器地址
+        target:'http://192.168.88.200:8080/mobile',  //生产服务器地址
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

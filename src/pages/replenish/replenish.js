@@ -16,10 +16,12 @@ Vue.prototype.$GLOBAL = GLOBAL;
 
 import 'lib-flexible'
 
+import 'mint-ui/lib/style.css'
+
 import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
 
-import 'mint-ui/lib/style.css'
+// import '../example/node_modules/mint-ui/lib/style.css'
 
 import "../../assets/css/reset.css";
 Vue.config.productionTip = false

@@ -4,10 +4,14 @@ Vue.use(Vuex)
  
 export default new Vuex.Store({
   state:{
-    count:0
+    count:0,
+    openid:""
   },
   mutations:{
     increment:state => state.count ++,
     decrement:state => state.count --,
+    setopenid(state, data) {
+      state.openid = data;
+    }
   }
 })

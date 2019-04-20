@@ -3,12 +3,13 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-    count:0,
-    hotelId:"",
-    actgoodslist:[]
+    count: 0,
+    hotelId: "",
+    openid: "",
+    actgoodslist: []
 }
 
-const mutations={
+const mutations = {
     actgoodslist(state, data) {
         state.actgoodslist = data;
     },
@@ -17,6 +18,9 @@ const mutations={
     },
     setcount(state, data) {
         state.count = data;
+    },
+    setopenid(state, data) {
+        state.openid = data;
     }
 }
 

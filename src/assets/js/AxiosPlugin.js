@@ -1,11 +1,12 @@
 require("es6-promise").polyfill();
 import axios from "axios";
 import { Toast } from 'mint-ui';
-
+import { MessageBox } from "mint-ui";
 var _this = this;
 export const Axios = axios.create({
-  // baseURL:  'http://192.168.88.200:8080/mobile/',//生产
-  BASEURL: window.location.host + "/",
+  // baseURL:  'http://192.168.88.200:8080/mobile/',//开发
+  baseURL:  'http://dev.byn-kj.com/mobile/',//测试
+  // BASEURL: window.location.host + "/",//生产
   // baseURL: "/api/", //开发
   // timeout: 10000
 });
@@ -15,12 +16,13 @@ export const Axios = axios.create({
 Axios.interceptors.request.use(
   config => {
     // 设置以 form 表单的形式提交参数，如果以 JSON 的形式提交表单，可忽略
-    if (config.method === "post" || config.method === "put") {
-      // if (config.data.json) {
+    console.log("config.data:",config.data)
+    if (config.method === "post") {
       config.headers = {
         "Content-Type": "application/json"
+        // "Content-Type": "application/x-www-form-urlencoded"
       };
-      // } else {
+
       // JSON 转换为 FormData
       // const formData = new FormData();
       // Object.keys(config.data).forEach(key =>
@@ -28,7 +30,6 @@ Axios.interceptors.request.use(
       // );
       // config.data = formData;
 
-      // }
     } else {
       config.headers = {
         "Content-Type": "application/json;charset=UTF-8"
@@ -55,20 +56,28 @@ Axios.interceptors.response.use(
     }
   },
   error => {
+    // alert(error.response.status)
     if(error.response.data){
       console.log('error.response.data:',error.response.data)
+      // alert(error.response.data)
     }
     if (error.response.status === 401 || error.response.status === 403) {
+     
       Toast({
         message: error.response.data,
         position: 'bottom',
         duration: 5000
       });
     } else if (error.response.status === 400) {
-      Toast({
-        message: error.response.data,
-        position: 'bottom',
-        duration: 5000
+      // Toast({
+      //   message: error.response.data,
+      //   position: 'bottom',
+      //   duration: 5000
+      // });
+      MessageBox.alert(
+        error.response.data+"，请联系客服027-83598166"
+      ).then(action => {
+        window.location.href = "tel:027-83598166";
       });
     } else if (error.response.status === 500) {
       Toast({

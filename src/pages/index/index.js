@@ -19,6 +19,9 @@ import 'lib-flexible'
 import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
 
+import qs from 'qs'
+Vue.prototype.$qs = qs
+
 import 'mint-ui/lib/style.css'
 
 import "../../assets/css/reset.css";

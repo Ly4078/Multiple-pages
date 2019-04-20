@@ -1,9 +1,17 @@
 <template>
   <div class="goods_list">
-    <marquee behavior="scroll" v-show="ismarquee" @click="ismarquee = false">
-      亲，请务必确认货道有货后再支付哟！
-      <img src="../../assets/image/close.png" alt>
-    </marquee>
+    <div class="boxtop" v-if="ispay" @click="handmodel"></div>
+    <div class="boxs" v-if="ispay">
+      <p>提示</p>
+      <p>支付完成,如3分钟内柜门未打开，请联系客服027-83598166</p>
+      <p>
+        <a href="tel:027-83598166">
+          <button>确定</button>
+        </a>
+      </p>
+    </div>
+    <!-- <div class="newbox"></div> -->
+    <marquee behavior="scroll" v-show="ismarquee" @click="ismarquee = false">亲，请务必确认货道有货后再支付哟！</marquee>
     <div class="goods_ul">
       <span v-show="goodslist.length<1">此设备没有商品或设备异常，请联系管理员</span>
       <ul>
@@ -50,14 +58,17 @@ import { Tabbar, TabItem } from "mint-ui";
 import { Indicator } from "mint-ui";
 Vue.component(Tabbar.name, Tabbar);
 Vue.component(TabItem.name, TabItem);
+import { MessageBox } from "mint-ui";
 export default {
   name: "goods_list",
   data() {
     return {
+      ispay: false,
       amout: 0,
       goodsNum: 0,
       actInd: "",
       selected: "",
+      wxback: {},
       actlist: [],
       goodslist: [],
       playtype: "", //1 微信  2 支付宝 3 其它（微信支付宝都可以）
@@ -71,18 +82,20 @@ export default {
       }
     }
   },
-
   methods: {
     //查询列表数据
     getlist(para) {
-      let _para = para ? para : "865533039122167";
+      let _para = para ? para : "865533039122167",
+        _this = this;
+      if (!this.wxback.code) {
+        this.getplaytype(_para);
+      }
       Indicator.open({
         text: "加载中...",
         spinnerType: "fading-circle"
       });
       this.$http.get("yub/list/" + _para).then(res => {
-        let _this = this,
-          _data = res.data;
+        let _data = res.data;
         for (let i in _data) {
           _data[i].actInd = false;
         }
@@ -149,8 +162,19 @@ export default {
     },
     //去结算
     settlement() {
-      let _parms = {},
+      let _Url = "",
+        _parms = {},
         _list = [];
+      this.selected = 1;
+      Indicator.open({
+        text: "结算中...",
+        spinnerType: "fading-circle"
+      });
+      if (this.wxback && this.wxback.code) {
+        _Url = "yub/xw/" + this.wxback.code;
+      } else {
+        _Url = "yub/ila";
+      }
       const _date = new Date();
       let _md5 = this.$md5(
         this.amout.toFixed(2).toString() +
@@ -165,49 +189,180 @@ export default {
         signature: _md5,
         timestamp: _date.getTime().toString()
       };
-      this.$http.post("yub/ila", _parms).then(res => {
-        console.log("res:", res);
-        console.log(res.data);
-        this.html = res.data;
-        var form = res.data;
-
-        const div = document.createElement("div");
-        div.innerHTML = form; //此处form就是后台返回接收到的数据
-        document.body.appendChild(div);
-        document.forms[0].submit();
+      this.$http.post(_Url, _parms).then(res => {
+        Indicator.close();
+        if (this.playtype == 2 || this.playtype == 3) {
+          //支付宝环境或其它环境
+          this.html = res.data;
+          var form = res.data;
+          const div = document.createElement("div");
+          div.innerHTML = form; //此处form就是后台返回接收到的数据
+          document.body.appendChild(div);
+          document.forms[0].submit();
+        } else {
+          //微信环境
+          this.wxpay(res.data); //调取支付
+        }
       });
-      // this.$router.push({ path: "/paypage", params: {} });
-      //
+    },
+    wxpay(data) {
+      var vm = this;
+      //下面是解决WeixinJSBridge is not defined 报错的方法
+      if (typeof WeixinJSBridge == "undefined") {
+        //微信浏览器内置对象。参考微信官方文档
+        if (document.addEventListener) {
+          document.addEventListener(
+            "WeixinJSBridgeReady",
+            vm.onBridgeReady(data),
+            false
+          );
+        } else if (document.attachEvent) {
+          document.attachEvent("WeixinJSBridgeReady", vm.onBridgeReady(data));
+          document.attachEvent("onWeixinJSBridgeReady", vm.onBridgeReady(data));
+        }
+      } else {
+        vm.onBridgeReady(data);
+      }
+    },
+    onBridgeReady: function(data) {
+      let packageValue = data.package;
+      let arr = packageValue.split("=");
+      var vm = this;
+      WeixinJSBridge.invoke(
+        "getBrandWCPayRequest",
+        {
+          //下面参数内容都是后台返回的
+          debug: true,
+          appId: data.appId, //公众号名称，由商户传入
+          timeStamp: data.timeStamp, //时间戳
+          nonceStr: data.nonceStr, //随机串
+          package: data.package, //预支付id
+          signType: data.signType, //微信签名方式
+          paySign: data.paySign //微信签名
+        },
+        function(res) {
+          // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+          alert(JSON.stringify(res))
+          if (res.err_msg == "get_brand_wcpay_request:ok") {
+            // vm.$router.push("/successPay");
+            vm.ispay = true;
+            // MessageBox.alert(
+            //   "支付完成,如3分钟内柜门未打开，请联系客服027-83598166"
+            // ).then(action => {
+            //   window.location.href = "tel:027-83598166";
+            // });
+          } else {
+            MessageBox("提示", "支付失败");
+            vm.$router.push("/");
+            //alert("支付失败,请跳转页面"+res.err_msg);
+          }
+        }
+      );
     },
     //支付环境判断
-    getplaytype() {
+    getplaytype(_para) {
       if (/MicroMessenger/.test(window.navigator.userAgent)) {
         this.playtype = 1;
-        // alert('微信客户端');
+        window.location.href =
+          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://2434481w3x.wicp.vip/mobile/index.html&response_type=code&scope=snsapi_base&state=" +
+          _para +
+          "#wechat_redirect";
+        // alert("微信客户端");
       } else if (/AlipayClient/.test(window.navigator.userAgent)) {
         this.playtype = 2;
-        // alert('支付宝客户端');
+        // alert("支付宝客户端");
       } else {
         this.playtype = 3;
-        // alert('其他浏览器');
+        // alert("其他浏览器");
+      }
+    },
+    handmodel(){
+      this.ispay= false;
+      this.amout= 0;
+      this.goodsNum= 0;
+      this.actInd= "";
+      this.selected= "";
+      this.actlist= [];
+      for(let i in this.getlist){
+        this.goodslist[i].actInd = false;
       }
     }
   },
   created() {
-    this.getplaytype();
-    let url = document.location.toString();
-    let arrUrl = url.split("?");
-    let para = arrUrl[1];
-    this.getlist(para);
+    //  this.getlist();
+
+    let astr = window.location.href,
+      aobj = {};
+    if (astr.indexOf("code") != -1) {
+      let anum = astr.indexOf("?");
+      astr = astr.substr(anum + 1);
+      let aarr = astr.split("&");
+      for (let i = 0; i < aarr.length; i++) {
+        let barr = aarr[i].split("=");
+        aobj[barr[0]] = barr[1];
+      }
+      this.wxback = aobj;
+      this.getlist(aobj.state);
+    } else {
+      let url = document.location.toString();
+      let arrUrl = url.split("?"),ujh=0;
+      if(arrUrl[1].indexOf("#")!=-1){
+         ujh = arrUrl[1].indexOf("#");
+      }
+      const _code = arrUrl[1].substr(0, ujh);
+      this.getlist(_code);
+    }
   }
 };
 </script>
 <style lang="less">
 .goods_list {
-  position: fixed;
+  // position: fixed;
   width: 100%;
   height: 100%;
-  background: #FDFAE4;
+  position: absolute;
+  top: 0;
+  background: #fdfae4;
+  .newbox {
+    height: 1500px;
+    background: red;
+    width: 40%;
+  }
+  .boxs {
+    position: fixed;
+    top: 30%;
+    left: 10%;
+    z-index: 9999;
+    width: 70%;
+    padding: 5%;
+    background: #fff;
+    p {
+      margin: 10px;
+    }
+    p:nth-child(1) {
+      color: #000;
+      font-size: 30px;
+    }
+    p:nth-child(2) {
+      color: #999;
+      font-size: 26px;
+    }
+    p:nth-child(3) {
+      margin-top: 20px;
+      button {
+        padding: 6px 15px;
+      }
+      font-size: 35px;
+    }
+  }
+  .boxtop {
+    position: fixed;
+    z-index: 9998;
+    width: 100%;
+    height: 100%;
+    background: rgb(32, 29, 29);
+    opacity: 0.6;
+  }
   marquee {
     position: fixed;
     top: 0;
@@ -218,12 +373,11 @@ export default {
       height: 15px;
     }
   }
-  
   .goods_ul {
     width: 93.6%;
     height: 100%;
     padding: 3.2%;
-    margin-bottom: 100px;
+    padding-bottom: 110px;
     overflow-y: auto;
     ul {
       li {
@@ -245,7 +399,7 @@ export default {
         }
         img {
           width: 98%;
-          padding:2% 1%;
+          padding: 2% 1%;
           height: 340px;
           border-radius: 4px;
         }
@@ -286,7 +440,6 @@ export default {
             }
           }
         }
-        
       }
       li:nth-child(2n) {
         // background: blue;
@@ -296,8 +449,8 @@ export default {
         margin-right: 22px;
       }
       .actclass {
-          background: #fdd808;
-        }
+        background: #fdd808;
+      }
     }
   }
   .mint-tabbar {
