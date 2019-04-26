@@ -3,12 +3,16 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-    actgoodslist:[]
+    actgoodslist:[],
+    para:""
 }
 
 const mutations={
     actgoodslist(state, data) {
         state.actgoodslist = data;
+    },
+    setpara(state,data){
+        state.para=data
     }
 }
 

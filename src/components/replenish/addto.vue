@@ -24,8 +24,8 @@
       </ul>
     </div>
     <div class="ad_footer">
-      <div @click="handbuton(1)">开门补货</div>
-      <div @click="handbuton(2)">补货完成</div>
+      <div @click.stop="handbuton(1)">开门补货</div>
+      <div @click.stop="handbuton(2)">补货完成</div>
     </div>
   </div>
 </template>
@@ -34,15 +34,18 @@
 import Vue from "vue";
 import { Toast } from "mint-ui";
 import { Indicator } from "mint-ui";
+import { MessageBox } from "mint-ui";
 export default {
   name: "addto",
   data() {
     return {
       isopen: true,
+      frequency:0,
       roomNo: "",
       repdata: {},
       actlist: [],
-      goodslist: []
+      goodslist: [],
+      successdoor: []
     };
   },
   filters: {
@@ -57,20 +60,42 @@ export default {
     goback() {
       window.history.back(-1);
     },
+    //数据还原
+    reduction() {
+      this.isopen = true;
+      this.roomNo = "";
+      this.repdata = {};
+      this.actlist = [];
+      this.goodslist = [];
+      this.successdoor = [];
+    },
     //查询列表数据
     getdetails() {
       const _this = this;
       this.$http.get("replenish/details/" + this.roomNo).then(res => {
-        let _data = res.data;
-        if (_data.length > 0) {
+        if (res.data.length > 0) {
+           let _data = res.data;
           for (let i = 0; i < _data.length; i++) {
             _data[i].act = false;
           }
+         _data.sort(this.compare("channelNo"));
+          setTimeout(() => {
+            _this.goodslist = _data;
+          }, 200);
+        }else{
+          _this.goodslist=[];
+            MessageBox.alert("此设备补货完成").then(action => {
+          });
         }
-        setTimeout(() => {
-          _this.goodslist = _data;
-        }, 200);
       });
+    },
+    //排序
+    compare(property) {
+      return function(a, b) {
+        var value1 = a[property];
+        var value2 = b[property];
+        return value1 - value2;
+      };
     },
     //点击数列某条数据
     handitem(obj, ind) {
@@ -85,10 +110,38 @@ export default {
         }
       }
     },
-    //开门
+    //开门前检验
     handbuton(val) {
+      this.frequency=0;
+      if (this.actlist.length > 0) {
+        if (val == 1) {
+          this.opendoor(val);
+        } else if (val == 2) {
+          if (this.isSubset(this.successdoor, this.actlist)) {
+            MessageBox({
+              message: "请确认商品已放进货道",
+              showCancelButton: true,
+              confirmButtonText: "确定",
+              cancelButtonText: "取消"
+            }).then(action => {
+              if (action == "confirm") {
+                this.opendoor(val);
+              }
+            });
+          } else {
+            Toast("请先开门补货，再完成确认");
+          }
+        }
+      } else {
+        Toast("请先选择货道");
+      }
+    },
+    //开门
+    opendoor(val) {
       let _url = val == 1 ? "replenish" : "replenish/complete",
-        arr = [];
+        arr = [],
+        _this = this,
+        _channelNo = "";
       if (this.isopen) {
         Indicator.open({
           text: "加载中...",
@@ -103,13 +156,93 @@ export default {
         }
         this.isopen = false;
         this.$http.post(_url, arr).then(res => {
-          Indicator.close();
-          this.isopen = true;
-          alert(JSON.stringify(res));
-          Toast(res.data);
-          if (val == 2) {
-            this.getdetails();
+          if (res.status == 200) {
+            let s = this.actlist.length > 1 ? this.actlist.length * 500 : 1000;
+            setTimeout(() => {
+              _this.waiting(val, res.data, this.actlist.length);
+            }, s);
           }
+        });
+      }
+    },
+    //判断一个数组是否是另一数组的子集
+    isSubset(arr1, arr2) {
+      let i = 0,
+        j = 0;
+      if (arr1.length < arr2.length) return false;
+      while (i < arr2.length && j < arr1.length) {
+        if (arr1[j].channelNo < arr2[i].channelNo) {
+          j++;
+        } else if (arr1[j].channelNo == arr2[i].channelNo) {
+          j++;
+          i++;
+        } else if (arr1[j].channelNo > arr2[i].channelNo) {
+          return false;
+        }
+      }
+
+      if (i < arr2.length) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    waiting(val, data, num) {
+      let _this = this,
+        _num = num > 1 ? num * 500 : 1000;
+      this.frequency++;
+      if (this.frequency < 5) {
+        this.$http.get("openResult/" + data).then(res => {
+          if (res.data) {
+            this.result = res.data;
+            Indicator.close();
+            this.isopen = true;
+            if( res.data.result==1 || res.data.result==3){
+              this.successdoor=this.actlist;
+            }
+            if(res.data.result ==2){
+              this.successdoor=[];
+              let arr1=[];
+              if(res.data.remark.indexOf("|")==-1){
+                arr1.push(res.data.remark)
+              }else{
+                arr1=res.data.remark.split("|");
+              }
+              
+              for(let i in this.actlist){
+                for(let j in arr1){
+                  if(arr1[j]==this.actlist[i].channelNo){
+                    let _obj=this.actlist[i];
+                     this.successdoor.push(_obj);
+                  }
+                }
+              }
+              if(res.data.remark.indexOf("|")==-1){
+                
+              }else{
+                let arr2=res.data.remark.split("|");
+                arr2.sort();
+                res.data.remark=arr2.join(",")
+                res.data.remark=res.data.remark.replace(/\,/g,"、");
+              }
+              res.data.remark="货道"+res.data.remark+"，补货失败，请确认货道门是否关好。"
+            }
+            MessageBox.alert(res.data.remark).then(action => {
+             if (val == 2 && res.data.result==1) {
+                history.go(0);
+              }
+            });
+          } else {
+            setTimeout(() => {
+              _this.waiting(val, data, num);
+            }, _num);
+          }
+        });
+      } else {
+        MessageBox.alert("请求超时，请重启设备再操作").then(action => {
+          this.isopen=true;
+          Indicator.close();
+          // history.go(0);
         });
       }
     }
@@ -125,7 +258,7 @@ export default {
 </script>
 <style lang="less">
 .addto {
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
   background: #eee;
@@ -161,6 +294,7 @@ export default {
     }
   }
   .addcont {
+    margin-bottom:100px;
     ul > li {
       height: 116px;
       padding: 16px 0;

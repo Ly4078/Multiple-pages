@@ -6,6 +6,7 @@ const state = {
     count: 0,
     hotelId: "",
     openid: "",
+    wxback:{},
     actgoodslist: []
 }
 
@@ -21,6 +22,9 @@ const mutations = {
     },
     setopenid(state, data) {
         state.openid = data;
+    },
+    setwxback(state, data) {
+        state.wxback = data;
     }
 }
 

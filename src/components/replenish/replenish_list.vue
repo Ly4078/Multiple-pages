@@ -1,6 +1,6 @@
 <template>
   <div class="replenish_list">
-    <ul class="bmbox" v-show="status==0">
+    <ul class="bmbox" v-if="status==2">
       <li>提示：酒店补货员需要申请后才可使用</li>
       <li>
         <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="trem.username"></mt-field>
@@ -9,8 +9,8 @@
         <mt-field label="姓名" placeholder="请输入姓名" v-model="trem.trueName"></mt-field>
       </li>
     </ul>
-    <mt-button type="primary" @click="handleapply" v-show="status==-1">申请补货员</mt-button>
-    <div class="reptop" v-show="status==1">
+    <mt-button type="primary" @click="handleapply" v-if="status==2">申请补货员</mt-button>
+    <div class="reptop" v-if="status==1">
       <div class="reptitle">
         <span>补货清单</span>
       </div>
@@ -64,7 +64,7 @@ export default {
         trueName: ""
       },
       hotelId: "",
-      status: "",
+      status: 3,
       nav: [
         {
           id: 1,
@@ -79,30 +79,18 @@ export default {
     };
   },
   methods: {
-    //登录
-    getlogin(code) {
-      const _this = this;
-      this.$http.get("replenish/login/" + code).then(res => {
-        this.status = res.data.status;
-        localStorage.setItem("TOKEN", res.data.token);
-        if (res.data.status == 1) {
-          this.getreplenish();
-        }
-      });
-    },
     //查询数据
     getreplenish() {
-      this.$http
-        .get("replenish").then(res => {
-          // alert(JSON.stringify(res));
-          if (res.status == 200) {
-            this.hotelId = res.data.hotelId;
-            this.goodsList = res.data.goodsList;
-            this.roomList = res.data.roomList;
-            this.datalist = res.data.roomList;
-            this.$store.commit("sethotelId", res.data.hotelId);
-          }
-        });
+      this.$http.get("replenish").then(res => {
+        // alert(JSON.stringify(res));
+        if (res.status == 200) {
+          this.hotelId = res.data.hotelId;
+          this.goodsList = res.data.goodsList;
+          this.roomList = res.data.roomList;
+          this.datalist = res.data.roomList;
+          this.$store.commit("sethotelId", res.data.hotelId);
+        }
+      });
     },
     //切换nav
     handnav(obj) {
@@ -148,7 +136,7 @@ export default {
             if (res.status == 200) {
               Indicator.close();
               this.status = 4;
-              MessageBox("提示", "申请成功，请等待审核结果");
+              MessageBox("申请成功，请等待审核结果");
             }
           });
         }
@@ -156,28 +144,20 @@ export default {
     }
   },
   created() {
-    let astr = window.location.href,
-      aobj = {};
-    if (astr.indexOf("code") != -1) {
-      let anum = astr.indexOf("?");
-      astr = astr.substr(anum + 1);
-      let aarr = astr.split("&");
-      for (let i = 0; i < aarr.length; i++) {
-        let barr = aarr[i].split("=");
-        aobj[barr[0]] = barr[1];
+    if (this.$route.query && this.$route.query.status) {
+      let _status = this.$route.query.status;
+      _status = _status == 0 ? "2" : _status;
+      this.status = _status;
+      if (this.$route.query.status == 1) {
+        this.getreplenish();
       }
-      this.wxback = aobj;
-      this.getlogin(aobj.code);
-    } else {
-      window.location.href =
-        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/replenish.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
     }
   }
 };
 </script>
 <style lang="less">
 .replenish_list {
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
   background: #eee;
@@ -269,8 +249,16 @@ export default {
   }
   .bmbox {
     font-size: 30px;
+    text-align: left;
+    li {
+      .mint-cell {
+        padding-left: 2%;
+      }
+    }
     li:nth-child(1) {
-      margin-bottom: 40px;
+      color: #ff0000;
+      margin-bottom: 20px;
+      padding-left: 2%;
     }
   }
   a {
@@ -287,9 +275,13 @@ export default {
     font-size: 40px !important;
   }
   .mint-button {
-    font-size: 40px !important;
-    height: auto;
-    margin-top: 50px;
+    width: 93%;
+    height: 88px;
+    background: rgba(253, 216, 8, 1);
+    border-radius: 44px;
+    font-size: 36px !important;
+    color: #302f2f;
+    margin: 20px 3%;
   }
   .load {
     font-size: 30px;

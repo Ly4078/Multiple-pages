@@ -2,43 +2,63 @@
   <div class="goods_list">
     <div class="boxtop" v-if="ispay" @click="handmodel"></div>
     <div class="boxs" v-if="ispay">
-      <p>提示</p>
-      <p>支付完成,如3分钟内柜门未打开，请联系客服027-83598166</p>
+      <p>支付成功！</p>
       <p>
-        <a href="tel:027-83598166">
-          <button>确定</button>
-        </a>
+        支付完成,如3分钟内柜门未打开，请
+        <a href="tel:027-83598166">联系客服</a>
       </p>
     </div>
-    <!-- <div class="newbox"></div> -->
-    <marquee behavior="scroll" v-show="ismarquee" @click="ismarquee = false">亲，请务必确认货道有货后再支付哟！</marquee>
+    <marquee behavior="scroll" v-show="ismarquee" @click="ismarquee = false">售后电话：027-83598166</marquee>
     <div class="goods_ul">
-      <span v-show="goodslist.length<1">此设备没有商品或设备异常，请联系管理员</span>
+      <!-- <span v-show="goodslist.length<1">此设备没有商品或设备异常，请联系管理员</span> -->
       <ul>
         <li
           v-for="(item,index) in goodslist"
           :key="index"
-          :class="item.actInd? 'actclass' : '' "
+          :class="!item.salePrice || item.status==0? 'banclass' : item.actInd? 'actclass' : ''  "
           @click.stop="selectItem(item,index)"
         >
           <div class="serial">{{item.channelNo}}</div>
-          <img :src="$GLOBAL.API+item.thumb" alt="商品图片">
+          <div class="imgbox">
+            <div
+              class="circle"
+              v-if="!item.salePrice || item.status==0"
+            >{{!item.salePrice?'无货':item.status==0?'已售':''}}</div>
+            <img v-else :src="$GLOBAL.API+item.thumb" alt="商品图片">
+          </div>
+
           <div class="goodsdateil">
             <div class="title">{{item.name}}</div>
             <div class="suoming">{{item.remark}}</div>
-            <div class="more" @click.stop="selectItem(item,index)">
+            <div class="more">
               <span class="moreleft">
                 <i>￥</i>
                 <em>{{item.salePrice}}</em>
               </span>
-              <img class="morerigh" v-show="item.actInd" src="../../assets/image/reducing.png" alt>
-              <img class="morerigh" v-show="!item.actInd" src="../../assets/image/add.png" alt>
+              <img
+                class="morerigh"
+                v-show="item.salePrice && item.status!=0 && item.actInd"
+                src="../../assets/image/reducing.png"
+                alt
+              >
+              <img
+                class="morerigh"
+                v-show="item.salePrice && item.status!=0 && !item.actInd"
+                src="../../assets/image/add.png"
+                alt
+              >
+              <img
+                class="morerigh"
+                v-show="!item.salePrice || item.status==0"
+                src="../../assets/image/ban.png"
+                alt
+              >
             </div>
           </div>
         </li>
       </ul>
     </div>
-    <mt-tabbar v-model="selected">
+    <mt-tabbar v-model="selected" v-if="goodslist.length>0">
       <mt-tab-item id="1">
         <img src="../../assets/image/gouwuche.png">
         <i class="goods_num" v-show="goodsNum>0">{{goodsNum}}</i>
@@ -72,13 +92,13 @@ export default {
       wxback: {},
       actlist: [],
       goodslist: [],
-      playtype: "", //1 微信  2 支付宝 3 其它（微信支付宝都可以）
+      playtype: "", //检测支付环境   1 微信  2 支付宝 3 其它（手机浏览器，使用支付宝支付）
       ismarquee: true
     };
   },
   watch: {
     selected: function() {
-       this.isopen=true;
+      this.isopen = true;
       if (this.selected == 2) {
         this.settlement();
       }
@@ -87,16 +107,13 @@ export default {
   methods: {
     //查询列表数据
     getlist(para) {
-      let _para = para ? para : "865533039122167",
-        _this = this;
-      if (!this.wxback.code) {
-        this.getplaytype(_para);
-      }
+      let _this = this;
+      this.$store.commit("setpara", para);
       Indicator.open({
         text: "加载中...",
         spinnerType: "fading-circle"
       });
-      this.$http.get("yub/list/" + _para).then(res => {
+      this.$http.get("yub/list/" + para).then(res => {
         let _data = res.data;
         for (let i in _data) {
           _data[i].actInd = false;
@@ -119,25 +136,41 @@ export default {
         }
         setTimeout(() => {
           Indicator.close();
+          _data.sort(this.compare("channelNo"));
           _this.goodslist = _data;
         }, 100);
       });
     },
+    //排序
+    compare(property) {
+      return function(a, b) {
+        var value1 = a[property];
+        var value2 = b[property];
+        return value1 - value2;
+      };
+    },
     //选择某个数据
     selectItem(obj, ind) {
-      this.goodslist[ind].actInd = !this.goodslist[ind].actInd;
-      let _salePrice = this.goodslist[ind].salePrice;
-      if (this.goodslist[ind].actInd) {
-        this.amout = this.calculation(this.amout, _salePrice, 1);
-        this.actlist.push(obj);
-        this.goodsNum++;
-        // this.amout = (this.amout * 100 + _salePrice * 100) / 100;
+      if (!obj.salePrice || obj.status == 0) {
       } else {
-        this.amout = this.calculation(this.amout, _salePrice, 2);
-        this.goodsNum--;
-        for (let i in this.actlist) {
-          if (obj.goodsId == this.actlist[i].goodsId) {
-            this.actlist.splice(i, 1);
+        this.goodslist[ind].actInd = !this.goodslist[ind].actInd;
+        let _salePrice = this.goodslist[ind].salePrice;
+        if (this.goodslist[ind].actInd) {
+          if (this.actlist.length < 5) {
+            this.amout = this.calculation(this.amout, _salePrice, 1);
+            this.actlist.push(obj);
+            this.goodsNum++;
+          } else {
+            this.goodslist[ind].actInd = !this.goodslist[ind].actInd;
+            MessageBox("单次最多可购买5件商品，可多次购买");
+          }
+        } else {
+          this.amout = this.calculation(this.amout, _salePrice, 2);
+          this.goodsNum--;
+          for (let i in this.actlist) {
+            if (obj.goodsId == this.actlist[i].goodsId) {
+              this.actlist.splice(i, 1);
+            }
           }
         }
       }
@@ -167,6 +200,10 @@ export default {
       let _Url = "",
         _parms = {},
         _list = [];
+        if(this.actlist.length<1){
+          MessageBox("请选择商品");
+          return
+        }
       if (this.isopen) {
         this.selected = 1;
         Indicator.open({
@@ -194,7 +231,7 @@ export default {
         };
         this.$http.post(_Url, _parms).then(res => {
           Indicator.close();
-          this.isopen=true;
+          this.isopen = true;
           if (this.playtype == 2 || this.playtype == 3) {
             //支付宝环境或其它环境
             this.html = res.data;
@@ -230,8 +267,9 @@ export default {
       }
     },
     onBridgeReady: function(data) {
-      let packageValue = data.package;
-      let arr = packageValue.split("=");
+      // let packageValue = data.package;
+
+      // let arr = packageValue.split("=");
       var vm = this;
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest",
@@ -247,17 +285,12 @@ export default {
         },
         function(res) {
           // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-          alert(JSON.stringify(res));
+          // alert(JSON.stringify(res));
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // vm.$router.push("/successPay");
             vm.ispay = true;
-            // MessageBox.alert(
-            //   "支付完成,如3分钟内柜门未打开，请联系客服027-83598166"
-            // ).then(action => {
-            //   window.location.href = "tel:027-83598166";
-            // });
           } else {
-            MessageBox("提示", "支付失败");
+            MessageBox("支付失败");
             vm.$router.push("/");
             //alert("支付失败,请跳转页面"+res.err_msg);
           }
@@ -266,6 +299,7 @@ export default {
     },
     //支付环境判断
     getplaytype(_para) {
+      this.$store.commit("setpara", "");
       if (/MicroMessenger/.test(window.navigator.userAgent)) {
         this.playtype = 1;
         window.location.href =
@@ -275,9 +309,11 @@ export default {
         // alert("微信客户端");
       } else if (/AlipayClient/.test(window.navigator.userAgent)) {
         this.playtype = 2;
+        this.getlist(_para);
         // alert("支付宝客户端");
       } else {
         this.playtype = 3;
+        this.getlist(_para);
         // alert("其他浏览器");
       }
     },
@@ -288,36 +324,50 @@ export default {
       this.actInd = "";
       this.selected = "";
       this.actlist = [];
+      this.getlist(this.wxback.state);
       for (let i in this.getlist) {
         this.goodslist[i].actInd = false;
+      }
+    },
+    getcode() {
+      let astr = window.location.href,
+        aobj = {};
+
+      
+
+      if (astr.indexOf("code") != -1) {
+        let anum = astr.indexOf("?");
+        astr = astr.substr(anum + 1);
+        let aarr = astr.split("&");
+        for (let i = 0; i < aarr.length; i++) {
+          let barr = aarr[i].split("=");
+          aobj[barr[0]] = barr[1];
+        }
+        this.wxback = aobj;
+        this.getlist(aobj.state);
+      } else {
+        let url = document.location.toString();
+        let arrUrl = url.split("?"),
+          ujh = 0;
+        if (arrUrl[1].indexOf("#") != -1) {
+          ujh = arrUrl[1].indexOf("#");
+        }
+        const _para = arrUrl[1].substr(0, ujh);
+        this.getplaytype(_para);
       }
     }
   },
   created() {
-    //  this.getlist();
-
-    let astr = window.location.href,
-      aobj = {};
-    if (astr.indexOf("code") != -1) {
-      let anum = astr.indexOf("?");
-      astr = astr.substr(anum + 1);
-      let aarr = astr.split("&");
-      for (let i = 0; i < aarr.length; i++) {
-        let barr = aarr[i].split("=");
-        aobj[barr[0]] = barr[1];
-      }
-      this.wxback = aobj;
-      this.getlist(aobj.state);
-    } else {
-      let url = document.location.toString();
-      let arrUrl = url.split("?"),
-        ujh = 0;
-      if (arrUrl[1].indexOf("#") != -1) {
-        ujh = arrUrl[1].indexOf("#");
-      }
-      const _code = arrUrl[1].substr(0, ujh);
-      this.getlist(_code);
+    // console.log('created')
+    // let _para = "0273c71bf22d8fc";
+    //   this.getplaytype(_para);
+    //   return;
+    if(this.$store.state.para){
+      this.getplaytype(this.$store.state.para);
+    }else{
+      this.getcode();
     }
+    
   }
 };
 </script>
@@ -341,6 +391,7 @@ export default {
     z-index: 9999;
     width: 70%;
     padding: 5%;
+    border-radius:10px;
     background: #fff;
     p {
       margin: 10px;
@@ -374,6 +425,7 @@ export default {
     top: 0;
     left: 0;
     color: red;
+    z-index:5;
     img {
       width: 15px;
       height: 15px;
@@ -392,22 +444,43 @@ export default {
         float: left;
         margin-bottom: 22px;
         background: #fff;
+        position: relative;
         .serial {
           width: 32px;
           height: 32px;
           background: #fdd808;
           border-radius: 4px 0px 0px 0px;
           position: absolute;
+          top: 5px;
+          left: 3px;
           font-size: 30px;
           font-family: "DIN-Bold";
           color: #151515;
           line-height: 32px;
         }
-        img {
+        .imgbox {
           width: 98%;
           padding: 2% 1%;
           height: 340px;
           border-radius: 4px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+          .circle {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: #262626;
+            text-align: center;
+            line-height: 170px;
+            font-size: 48px;
+            font-family: "SourceHanSansCN-Regular";
+            font-weight: 400;
+          }
         }
         .goodsdateil {
           padding: 12px 8px 10px 13px;
@@ -456,6 +529,13 @@ export default {
       }
       .actclass {
         background: #fdd808;
+      }
+      .banclass {
+        color: #aaa;
+        .title,
+        .suoming {
+          color: #aaa !important;
+        }
       }
     }
   }

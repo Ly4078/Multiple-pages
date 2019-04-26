@@ -1,3 +1,3 @@
 <template>
-  <div> this is cell page</div>
+  <div class="cell">this is cells page</div>
 </template>

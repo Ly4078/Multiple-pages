@@ -1,10 +1,105 @@
-webpackJsonp([3],{
+webpackJsonp([2],{
 
-/***/ 106:
+/***/ 104:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"example"},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == 0),expression:"status == 0"}],staticClass:"parbox"},[_c('mt-field',{attrs:{"label":"用户名：","placeholder":"请输入用户名"},model:{value:(_vm.apply.trueName),callback:function ($$v) {_vm.$set(_vm.apply, "trueName", $$v)},expression:"apply.trueName"}}),_vm._v(" "),_c('mt-field',{attrs:{"label":"手机号：","placeholder":"请输入手机号","type":"number"},model:{value:(_vm.apply.username),callback:function ($$v) {_vm.$set(_vm.apply, "username", $$v)},expression:"apply.username"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.handapply}},[_vm._v("申请")])],1),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.status == 1),expression:"status == 1"}],staticClass:"parbox"},[_c('p',{staticClass:"prompt"},[_vm._v("提示：请输入正确的8位设备编号")]),_vm._v(" "),_c('mt-field',{attrs:{"label":"设备号：","placeholder":"请输入8位设备号","type":"number"},model:{value:(_vm.device.equipNo),callback:function ($$v) {_vm.$set(_vm.device, "equipNo", $$v)},expression:"device.equipNo"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.inquire}},[_vm._v("设备查询")]),_vm._v(" "),_vm._l((_vm.equiplist),function(item,index){return _c('div',{key:item.equipNo,staticClass:"equipul",class:_vm.actequipNo==item.equipNo?'actequipul':'',on:{"click":function($event){return _vm.handli(item)}}},[_c('p',[_vm._v("酒店名称："+_vm._s(item.hotelName))]),_vm._v(" "),_c('p',[_vm._v("设备编号："+_vm._s(item.equipNo))]),_vm._v(" "),_c('ul',{directives:[{name:"show",rawName:"v-show",value:(_vm.actequipNo==item.equipNo),expression:"actequipNo==item.equipNo"}],staticClass:"addcont"},_vm._l((item.channelList),function(items,indexs){return _c('li',{key:items.channelId,on:{"click":function($event){return _vm.handitem(items,index,indexs)}}},[_c('img',{directives:[{name:"show",rawName:"v-show",value:(items.act),expression:"items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(18),"alt":""}}),_vm._v(" "),_c('img',{directives:[{name:"show",rawName:"v-show",value:(!items.act),expression:"!items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(17),"alt":""}}),_vm._v(" "),_c('div',{staticClass:"liright"},[_c('p',{staticClass:"goodsname"},[_c('span',[_vm._v("货道"+_vm._s(items.channelNo))])])])])}),0)])}),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handfirst}},[_vm._v("初次布货")]),_vm._v(" "),_c('mt-button',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],attrs:{"type":"primary"},on:{"click":_vm.handdoor}},[_vm._v("开门补货")])],2)])}
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__ = __webpack_require__(24);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_ac396dde_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(124);
+function injectStyle (ssrContext) {
+  __webpack_require__(89)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_ac396dde_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 105:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_init_vue__ = __webpack_require__(25);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_3c565a98_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_init_vue__ = __webpack_require__(116);
+var normalizeComponent = __webpack_require__(2)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_init_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_3c565a98_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_init_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 115:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('router-view')],1)}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+
+/***/ 116:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"exinit"})}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+
+/***/ 124:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"example"},[(_vm.status == 2)?_c('div',{staticClass:"parbox"},[_c('p',{staticClass:"partitle"},[_vm._v("申请成为运营人员")]),_vm._v(" "),_c('mt-field',{attrs:{"label":"用户名：","placeholder":"请输入用户名"},model:{value:(_vm.apply.trueName),callback:function ($$v) {_vm.$set(_vm.apply, "trueName", $$v)},expression:"apply.trueName"}}),_vm._v(" "),_c('mt-field',{attrs:{"label":"手机号：","placeholder":"请输入手机号","type":"number"},model:{value:(_vm.apply.username),callback:function ($$v) {_vm.$set(_vm.apply, "username", $$v)},expression:"apply.username"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.handapply}},[_vm._v("提交申请")])],1):_vm._e(),_vm._v(" "),(_vm.status == 1)?_c('div',{staticClass:"parbox"},[_c('p',{staticClass:"prompt"},[_vm._v("提示：请输入正确的8位或者15位设备编号")]),_vm._v(" "),_c('mt-field',{attrs:{"label":"设备号：","placeholder":"请输入8位或者15位设备号"},model:{value:(_vm.device.equipNo),callback:function ($$v) {_vm.$set(_vm.device, "equipNo", $$v)},expression:"device.equipNo"}}),_vm._v(" "),_c('mt-button',{attrs:{"type":"primary"},on:{"click":_vm.inquire}},[_vm._v("设备查询")]),_vm._v(" "),_vm._l((_vm.equiplist),function(item,index){return _c('div',{key:item.equipNo,staticClass:"equipul",class:_vm.actequip.equipNo==item.equipNo?'actequipul':'',on:{"click":function($event){return _vm.handli(item)}}},[_c('p',[_vm._v("酒店名称："+_vm._s(item.hotelName))]),_vm._v(" "),_c('p',[_vm._v("设备编号："+_vm._s(item.equipNo))]),_vm._v(" "),_c('ul',{directives:[{name:"show",rawName:"v-show",value:(_vm.actequip.equipNo==item.equipNo && item.firstStatus!=0),expression:"actequip.equipNo==item.equipNo && item.firstStatus!=0"}],staticClass:"addcont"},_vm._l((item.channelList),function(items,indexs){return _c('li',{key:items.channelId,on:{"click":function($event){return _vm.handitem(items,index,indexs)}}},[_c('img',{directives:[{name:"show",rawName:"v-show",value:(items.act),expression:"items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(18),"alt":""}}),_vm._v(" "),_c('img',{directives:[{name:"show",rawName:"v-show",value:(!items.act),expression:"!items.act"}],staticClass:"selectedimg",attrs:{"src":__webpack_require__(17),"alt":""}}),_vm._v(" "),_c('div',{staticClass:"liright"},[_c('p',{staticClass:"goodsname"},[_c('span',[_vm._v("货道"+_vm._s(items.channelNo))])])])])}),0)])}),_vm._v(" "),_c('mt-tabbar',{directives:[{name:"show",rawName:"v-show",value:(_vm.equiplist.length>0),expression:"equiplist.length>0"}],model:{value:(_vm.selected),callback:function ($$v) {_vm.selected=$$v},expression:"selected"}},[(_vm.actequip.firstStatus!=0)?_c('mt-tab-item',{attrs:{"id":"1"}},[_vm._v("开门")]):_vm._e(),_vm._v(" "),(_vm.actequip.firstStatus!=0)?_c('mt-tab-item',{attrs:{"id":"2"}},[_vm._v("已补货")]):_vm._e(),_vm._v(" "),(_vm.actequip.firstStatus==0)?_c('mt-tab-item',{attrs:{"id":"3"}},[_vm._v("初次布货")]):_vm._e()],1)],2):_vm._e()])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -75,12 +170,23 @@ module.exports = __webpack_require__.p + "static/img/yixz_icon.7fd3733.png";
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 
 
 
+
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Tabbar"].name, __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Tabbar"]);
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["TabItem"].name, __WEBPACK_IMPORTED_MODULE_1_mint_ui__["TabItem"]);
 __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Button"].name, __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Button"]);
 __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Field"].name, __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Field"]);
 
@@ -88,8 +194,11 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
   name: "goods_list",
   data() {
     return {
-      status: "",
+      selected: 0,
+      frequency: 0,
+      status: 3,
       isopen: true,
+      actequip: {},
       actequipNo: "",
       apply: {
         trueName: "",
@@ -99,6 +208,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
         channelNo: "",
         equipNo: ""
       },
+      result: {},
       wxback: {},
       actlist: [],
       equiplist: []
@@ -116,17 +226,17 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
         }
       }
       this.actlist = [];
+    },
+    selected: function () {
+      if (this.selected == 1 || this.selected == 2) {
+        this.handdoor(this.selected);
+      } else if (this.selected == 3) {
+        this.handfirst(this.selected);
+      }
     }
   },
+
   methods: {
-    //查询当前用户权限
-    queryPermission(code) {
-      this.$http.get("operation/login/" + code).then(res => {
-        //   0 未申请  1：已经申请成功
-        this.status = res.data.status;
-        localStorage.setItem("TOKEN", res.data.token);
-      });
-    },
     //申请成为运营人员
     handapply() {
       if (!this.apply.trueName) {
@@ -144,10 +254,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
       }
       __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open();
       this.$http.post("operation/apply", this.apply).then(res => {
-        console.log("res:", res);
         __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
         if (res.status == 200) {
-          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "申请提交成功，请等待审核");
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("申请提交成功，请等待审核");
         }
       });
     },
@@ -156,29 +265,37 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
       if (!this.device.equipNo) {
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])("请输入设备号");
       } else {
-        let _url = "operation/openCheck?equipNo=" + this.device.equipNo;
-        __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open();
-        this.$http.get(_url).then(res => {
-          __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
-          if (res.data.length > 0) {
-            let _datalist = res.data;
-            for (let i in _datalist) {
-              for (let j in _datalist[i].channelList) {
-                _datalist[i].channelList[j].act = false;
+        if (this.device.equipNo.length == 8 || this.device.equipNo.length == 15) {
+          let _url = "operation/openCheck?equipNo=" + this.device.equipNo;
+          __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open();
+          this.$http.get(_url).then(res => {
+            __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
+            if (res.data.length > 0) {
+              let _datalist = res.data;
+              for (let i in _datalist) {
+                for (let j in _datalist[i].channelList) {
+                  _datalist[i].channelList[j].act = false;
+                }
+                _datalist[i].channelList.sort(this.compare("channelNo"));
               }
-              _datalist[i].channelList.sort(this.compare("channelNo"));
+              if (_datalist.length == 1) {
+                this.actequipNo = _datalist[0].equipNo;
+                this.actequip = _datalist[0];
+              }
+              this.equiplist = _datalist;
+            } else {
+              this.equiplist = [];
+              this.device.equipNo = "";
+              __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("未查询到相关设备");
             }
-            if (_datalist.length == 1) {
-              this.actequipNo = _datalist[0].equipNo;
-            }
-            this.equiplist = _datalist;
-            console.log("equiplist:", this.equiplist);
-          } else {
-            this.equiplist = [];
-            this.device.equipNo = "";
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "未查询到相关设备");
-          }
-        });
+          });
+        } else {
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("设备编号应8位或15位，请重新输入");
+          this.device.equipNo = "";
+          this.equiplist = [];
+          this.actequipNo = "";
+          this.actequip = "";
+        }
       }
     },
     //排序
@@ -191,7 +308,6 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
     },
     //选中、取消选中某一个货道
     handitem(obj, val1, val2) {
-      console.log("obj:", obj);
       this.equiplist[val1].channelList[val2].act = !this.equiplist[val1].channelList[val2].act;
       if (this.equiplist[val1].channelList[val2].act) {
         this.actlist.push(obj);
@@ -202,83 +318,200 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
           }
         }
       }
-      console.log("actlist:", this.actlist);
     },
     //选择某一个设备
     handli(obj) {
       this.actequipNo = obj.equipNo;
+      this.actequip = obj;
     },
     //初次布货
-    handfirst() {
+    handfirst(val) {
+      let _this = this;
       if (this.isopen) {
-        if (this.actequipNo) {
+        if (this.actequip.equipNo) {
           this.isopen = false;
           __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open("加载中...");
-          this.$http.post("operation/first/" + this.actequipNo).then(res => {
-            this.isopen = true;
-            __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
+          this.$http.post("operation/first/" + this.actequip.equipNo).then(res => {
+            if (res.status == 200) {
+              let s = this.actequip.channelList.length * 500;
+              setTimeout(() => {
+                _this.waiting(val, res.data, this.actequip.channelList.length);
+              }, s);
+            }
           });
         } else {
-          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请先选中一个设备");
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("请先选中一个设备");
         }
       }
     },
-    //开门
-    handdoor(equipNo) {
-      let arr = [];
-      console.log("actlist321:", this.actlist, this.actlist.length);
+    //1开门 2 //补货确认
+    handdoor(val) {
+      this.selected = 0;
+      let arr = [],
+          _this = this,
+          _Url = "";
       if (this.isopen) {
-        if (this.actequipNo) {
+        if (this.actequip.equipNo) {
           if (this.actlist.length > 0) {
             for (let i in this.actlist) {
               let _obj = {};
-              _obj.channelId = this.actlist[i].channelId, _obj.channelNo = this.actlist[i].channelNo, _obj.equipNo = this.actequipNo;
+              _obj.channelId = this.actlist[i].channelId, _obj.channelNo = this.actlist[i].channelNo, _obj.equipNo = this.actequip.equipNo;
               arr.push(_obj);
             }
             __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].open("加载中...");
             this.isopen = false;
-            this.$http.post("operation/open", arr).then(res => {
-              __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
-              this.isopen = true;
-              __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", res.data);
-            });
+            _Url = val == 1 ? "operation/open" : "operation/replenish";
+            if (val == 2) {
+              __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])({
+                title: "提示",
+                message: "请确认商品已放进货道",
+                showCancelButton: true,
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+              }).then(action => {
+                console.log("action", action);
+                if (action == "confirm") {
+                  //点击确定
+                  this.$http.post(_Url, arr).then(res => {
+                    if (res.status == 200) {
+                      let s = this.actlist.length > 1 ? this.actlist.length * 500 : 1000;
+                      setTimeout(() => {
+                        _this.waiting(val, res.data, this.actlist.length);
+                      }, s);
+                    }
+                  });
+                } else if (action == "cancel") {
+                  //点击取消
+                  this.isopen = true;
+                  __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
+                }
+              });
+            } else {
+              this.$http.post(_Url, arr).then(res => {
+                if (res.status == 200) {
+                  let s = this.actlist.length > 1 ? this.actlist.length * 500 : 1000;
+                  setTimeout(() => {
+                    _this.waiting(val, res.data, this.actlist.length);
+                  }, s);
+                }
+              });
+            }
           } else {
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请选择货道");
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("请选择货道");
           }
         } else {
-          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("提示", "请先选中一个设备");
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"])("请先选中一个设备");
         }
       }
-      if (!this.device.channelNo) {
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])("请输入货道号");
-        return;
+    },
+    waiting(val, data, num) {
+      let _this = this,
+          _num = num > 1 ? num * 500 : 1000;
+      this.frequency++;
+      if (this.frequency < 5) {
+        this.$http.get("openResult/" + data).then(res => {
+          this.frequency = 0;
+          if (res.data.result) {
+            this.result = res.data;
+            __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
+            this.isopen = true;
+            __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert(res.data.remark).then(action => {
+              if (val == 2 && res.data.result == 1) {
+                history.go(0);
+              }
+              if (val == 3) {
+                history.go(0);
+              }
+            });
+          } else {
+            setTimeout(() => {
+              _this.waiting(val, data, num);
+            }, _num);
+          }
+        });
+      } else {
+        __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert("请求超时，请重启设备再操作").then(action => {
+          history.go(0);
+        });
       }
     }
   },
   created() {
-    let astr = window.location.href,
-        aobj = {};
-
-    if (astr.indexOf("code") != -1) {
-      let anum = astr.indexOf("?");
-      astr = astr.substr(anum + 1);
-      let aarr = astr.split("&");
-      for (let i = 0; i < aarr.length; i++) {
-        let barr = aarr[i].split("=");
-        aobj[barr[0]] = barr[1];
-      }
-      this.wxback = aobj;
-      this.queryPermission(aobj.code);
-    } else {
-      window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/example.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
+    if (this.$route.query && this.$route.query.status) {
+      let _status = this.$route.query.status;
+      _status = _status == 0 ? "2" : _status;
+      this.status = _status;
     }
   }
 });
 
 /***/ }),
 
-/***/ 30:
+/***/ 25:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: "Init",
+  data() {
+    return {
+      status: ""
+    };
+  },
+  methods: {
+    getcode() {
+      // let code = "0613m8t91164uN1LhBw91G3ft913m8tD";
+      // this.getlogin(code);
+      // return;
+
+      let astr = window.location.href,
+          aobj = {};
+
+      if (astr.indexOf("code") != -1) {
+        if (this.$store.state.wxback && this.$store.state.wxback.code) {
+          window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/example.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
+          this.$store.state.wxback = {};
+        } else {
+          let anum = astr.indexOf("?");
+          astr = astr.substr(anum + 1);
+          let aarr = astr.split("&");
+          for (let i = 0; i < aarr.length; i++) {
+            let barr = aarr[i].split("=");
+            aobj[barr[0]] = barr[1];
+          }
+          this.$store.commit("setwxback", aobj);
+          this.getlogin(aobj.code);
+        }
+      } else {
+        window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/example.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
+      }
+    },
+    //查询当前用户权限
+    getlogin(code) {
+      this.$http.get("operation/login/" + code).then(res => {
+        //   0 未申请  1：已经申请成功
+        this.status = res.data.status;
+        localStorage.setItem("TOKEN", res.data.token);
+        this.$router.push({
+          path: "/example",
+          query: res.data
+        });
+      });
+    }
+  },
+  created() {
+    this.getcode();
+  }
+});
+
+/***/ }),
+
+/***/ 34:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -290,7 +523,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
 //
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'app'
+  name: "app"
 });
 
 /***/ }),
@@ -299,17 +532,17 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].component(__WEBPACK_IMPORTED_MODULE
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_mint_ui__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_mint_ui___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_mint_ui__);
-__webpack_require__(13).polyfill();
+__webpack_require__(12).polyfill();
+
 
 
 
 var _this = this;
 const Axios = __WEBPACK_IMPORTED_MODULE_0_axios___default.a.create({
-  // baseURL:  'http://192.168.88.200:8080/mobile/',//开发
   baseURL: 'http://dev.byn-kj.com/mobile/' //测试
   // BASEURL: window.location.host + "/",//生产
   // baseURL: "/api/", //开发
@@ -322,7 +555,7 @@ const Axios = __WEBPACK_IMPORTED_MODULE_0_axios___default.a.create({
 // 在发送请求之前做某件事
 Axios.interceptors.request.use(config => {
   // 设置以 form 表单的形式提交参数，如果以 JSON 的形式提交表单，可忽略
-  console.log("config.data:", config.data);
+
   if (config.method === "post") {
     config.headers = {
       "Content-Type": "application/json"
@@ -340,11 +573,10 @@ Axios.interceptors.request.use(config => {
       "Content-Type": "application/json;charset=UTF-8"
     };
   }
-  // 下面会说在什么时候存储 token
+
   if (localStorage.getItem("TOKEN")) {
     config.headers.Authorization = localStorage.getItem("TOKEN");
   }
-
   return config;
 }, error => {
   alert("错误的传参", "fail");
@@ -370,8 +602,10 @@ Axios.interceptors.response.use(res => {
       duration: 5000
     });
   } else if (error.response.status === 400) {
-    __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert(error.response.data + ".请联系客服027-83598166").then(action => {
-      window.location.href = "tel:027-83598166";
+    // error.response.data+',<a href="tel:027-83598166">联系客服</a>'
+    __WEBPACK_IMPORTED_MODULE_1_mint_ui__["MessageBox"].alert(error.response.data).then(action => {
+      // window.location.href = "tel:027-83598166";
+      __WEBPACK_IMPORTED_MODULE_1_mint_ui__["Indicator"].close();
     });
   } else if (error.response.status === 500) {
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_mint_ui__["Toast"])({
@@ -397,13 +631,15 @@ Axios.interceptors.response.use(res => {
 
 /***/ }),
 
-/***/ 40:
+/***/ 45:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_example__ = __webpack_require__(92);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_example_init__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_example_example__ = __webpack_require__(104);
+
 
 
 
@@ -413,14 +649,18 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
   routes: [{
     path: '/',
+    name: 'Init',
+    component: __WEBPACK_IMPORTED_MODULE_2__components_example_init__["a" /* default */]
+  }, {
+    path: '/example',
     name: 'Example',
-    component: __WEBPACK_IMPORTED_MODULE_2__components_example__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_3__components_example_example__["a" /* default */]
   }]
 }));
 
 /***/ }),
 
-/***/ 41:
+/***/ 46:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -433,54 +673,20 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
   state: {
     count: 0,
-    openid: ""
+    openid: "",
+    wxback: {}
   },
   mutations: {
     increment: state => state.count++,
     decrement: state => state.count--,
     setopenid(state, data) {
       state.openid = data;
+    },
+    setwxback(state, data) {
+      state.wxback = data;
     }
   }
 }));
-
-/***/ }),
-
-/***/ 48:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__ = __webpack_require__(30);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_2e3e19f1_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(98);
-function injectStyle (ssrContext) {
-  __webpack_require__(74)
-}
-var normalizeComponent = __webpack_require__(8)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_2e3e19f1_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
 
 /***/ }),
 
@@ -501,6 +707,44 @@ const config = {
 
 /***/ }),
 
+/***/ 55:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__ = __webpack_require__(34);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_1ca3f939_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(115);
+function injectStyle (ssrContext) {
+  __webpack_require__(82)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_1ca3f939_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
 /***/ 6:
 /***/ (function(module, exports) {
 
@@ -515,16 +759,16 @@ const config = {
 
 /***/ }),
 
-/***/ 70:
+/***/ 78:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__example_vue__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__example_vue__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuex__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__store_store__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__store_store__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__assets_js_AxiosPlugin__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__assets_js_config__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_lib_flexible__ = __webpack_require__(9);
@@ -567,68 +811,19 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 
 /***/ }),
 
-/***/ 74:
+/***/ 82:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 81:
+/***/ 89:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 92:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__ = __webpack_require__(24);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_c82fc582_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__ = __webpack_require__(106);
-function injectStyle (ssrContext) {
-  __webpack_require__(81)
-}
-var normalizeComponent = __webpack_require__(8)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_script_index_0_example_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_3_vue_loader_lib_template_compiler_index_id_data_v_c82fc582_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_3_vue_loader_lib_selector_type_template_index_0_example_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
-
-/***/ }),
-
-/***/ 98:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('router-view')],1)}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ })
 
-},[70]);
-//# sourceMappingURL=example.08f3314ea8292994fd9c.js.map
+},[78]);
+//# sourceMappingURL=example.7f38fc82c911455f84a8.js.map
