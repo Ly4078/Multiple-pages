@@ -7,8 +7,8 @@
       <mt-button type="primary" @click="handapply">提交申请</mt-button>
     </div>
     <div class="parbox" v-if="status == 1">
-      <p class="prompt">提示：请输入正确的8位或者15位设备编号</p>
-      <mt-field label="设备号：" placeholder="请输入8位或者15位设备号" v-model="device.equipNo"></mt-field>
+      <p class="prompt">提示：请输入正确的15位设备编号</p>
+      <mt-field label="设备号：" placeholder="请输入8位或15位设备号" v-model="device.equipNo"></mt-field>
       <mt-button type="primary" @click="inquire">设备查询</mt-button>
       <!-- <mt-field label="货道号：" placeholder="请输入货道号" type="number" v-model="device.channelNo"></mt-field> -->
       <div
@@ -20,6 +20,7 @@
       >
         <p>酒店名称：{{item.hotelName}}</p>
         <p>设备编号：{{item.equipNo}}</p>
+        <p>房间号码：{{item.roomNo}}</p>
         <ul v-show="actequip.equipNo==item.equipNo && item.firstStatus!=0" class="addcont">
           <li
             v-for="(items,indexs) in item.channelList"
@@ -127,7 +128,7 @@ export default {
       this.$http.post("operation/apply", this.apply).then(res => {
         Indicator.close();
         if (res.status == 200) {
-          MessageBox("申请提交成功，请等待审核");
+          MessageBox.alert("申请提交成功，请等待审核").then(action => {});
         }
       });
     },
@@ -136,6 +137,11 @@ export default {
       if (!this.device.equipNo) {
         Toast("请输入设备号");
       } else {
+        console.log(
+          "equipNo:",
+          this.device.equipNo,
+          this.device.equipNo.length
+        );
         if (
           this.device.equipNo.length == 8 ||
           this.device.equipNo.length == 15
@@ -160,11 +166,13 @@ export default {
             } else {
               this.equiplist = [];
               this.device.equipNo = "";
-              MessageBox("未查询到相关设备");
+              MessageBox.alert("未查询到相关设备").then(action => {});
             }
           });
         } else {
-          MessageBox("设备编号应8位或15位，请重新输入");
+          MessageBox.alert("设备编号应8位或15位，请重新输入").then(
+            action => {}
+          );
           this.device.equipNo = "";
           this.equiplist = [];
           this.actequipNo = "";
@@ -221,7 +229,7 @@ export default {
               }
             });
         } else {
-          MessageBox("请先选中一个设备");
+          MessageBox.alert("请先选中一个设备").then(action => {});
         }
       }
     },
@@ -241,9 +249,8 @@ export default {
                 (_obj.equipNo = this.actequip.equipNo);
               arr.push(_obj);
             }
-            Indicator.open("加载中...");
             this.isopen = false;
-            _Url = val == 1 ? "operation/open" : "operation/replenish";
+            _Url = val == 1 ? "operation/open" : "operation/confirm";
             if (val == 2) {
               MessageBox({
                 title: "提示",
@@ -252,8 +259,9 @@ export default {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消"
               }).then(action => {
-                console.log("action", action);
-                if (action == "confirm") {  //点击确定
+                if (action == "confirm") {
+                  //点击确定
+                  Indicator.open("加载中...");
                   this.$http.post(_Url, arr).then(res => {
                     if (res.status == 200) {
                       let s =
@@ -265,12 +273,13 @@ export default {
                       }, s);
                     }
                   });
-                } else if (action == "cancel") { //点击取消
+                } else if (action == "cancel") {
+                  //点击取消
                   this.isopen = true;
-                  Indicator.close();
                 }
               });
             } else {
+              Indicator.open("加载中...");
               this.$http.post(_Url, arr).then(res => {
                 if (res.status == 200) {
                   let s =
@@ -282,10 +291,10 @@ export default {
               });
             }
           } else {
-            MessageBox("请选择货道");
+            MessageBox.alert("请选择货道").then(action => {});
           }
         } else {
-          MessageBox("请先选中一个设备");
+          MessageBox.alert("请先选中一个设备").then(action => {});
         }
       }
     },
@@ -302,10 +311,10 @@ export default {
             this.isopen = true;
             MessageBox.alert(res.data.remark).then(action => {
               if (val == 2 && res.data.result == 1) {
-                history.go(0);
+                this.clearactlist();
               }
               if (val == 3) {
-                history.go(0);
+                this.clearactlist();
               }
             });
           } else {
@@ -316,9 +325,18 @@ export default {
         });
       } else {
         MessageBox.alert("请求超时，请重启设备再操作").then(action => {
-          history.go(0);
+          this.clearactlist();
         });
       }
+    },
+    clearactlist() {
+      this.inquire();
+      this.actlist = [];
+      // ================
+      // for (let i in this.actlist) {
+      //   this.actlist[i].act = !this.actlist[i].act;
+      // }
+      // this.actlist = [];
     }
   },
   created() {

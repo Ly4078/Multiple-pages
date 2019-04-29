@@ -35,10 +35,17 @@ Axios.interceptors.request.use(
         "Content-Type": "application/json;charset=UTF-8"
       };
     }
-
-    if (localStorage.getItem("TOKEN")) {
-      config.headers.Authorization = localStorage.getItem("TOKEN");
+    
+    if(config.url.indexOf("super")>-1){
+      config.headers.Authorization = localStorage.getItem("supTOKEN");
+    }else if(config.url.indexOf("replenish")>-1){
+      config.headers.Authorization = localStorage.getItem("repTOKEN");
+    }else if(config.url.indexOf("operation")>-1){
+      config.headers.Authorization = localStorage.getItem("operTOKEN");
     }
+    // if (localStorage.getItem("TOKEN")) {
+    //   config.headers.Authorization = localStorage.getItem("TOKEN");
+    // }
     return config;
   },
   error => {

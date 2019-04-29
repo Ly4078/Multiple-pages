@@ -36,6 +36,7 @@ export default {
     //回退到上一页面
     goback() {
       window.history.back(-1);
+    
     },
     //补货房间列表
     getroomlist(hotelId,goodsId){

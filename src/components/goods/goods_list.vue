@@ -1,16 +1,7 @@
 <template>
   <div class="goods_list">
-    <div class="boxtop" v-if="ispay" @click="handmodel"></div>
-    <div class="boxs" v-if="ispay">
-      <p>支付成功！</p>
-      <p>
-        支付完成,如3分钟内柜门未打开，请
-        <a href="tel:027-83598166">联系客服</a>
-      </p>
-    </div>
     <marquee behavior="scroll" v-show="ismarquee" @click="ismarquee = false">售后电话：027-83598166</marquee>
     <div class="goods_ul">
-      <!-- <span v-show="goodslist.length<1">此设备没有商品或设备异常，请联系管理员</span> -->
       <ul>
         <li
           v-for="(item,index) in goodslist"
@@ -84,10 +75,10 @@ export default {
   data() {
     return {
       isopen: true,
-      ispay: false,
       amout: 0,
       goodsNum: 0,
       actInd: "",
+      deviceNo: "",
       selected: "",
       wxback: {},
       actlist: [],
@@ -108,7 +99,7 @@ export default {
     //查询列表数据
     getlist(para) {
       let _this = this;
-      this.$store.commit("setpara", para);
+      this.deviceNo = para;
       Indicator.open({
         text: "加载中...",
         spinnerType: "fading-circle"
@@ -162,7 +153,9 @@ export default {
             this.goodsNum++;
           } else {
             this.goodslist[ind].actInd = !this.goodslist[ind].actInd;
-            MessageBox("单次最多可购买5件商品，可多次购买");
+            MessageBox.alert("单次最多可购买5件商品，可多次购买").then(
+              action => {}
+            );
           }
         } else {
           this.amout = this.calculation(this.amout, _salePrice, 2);
@@ -200,12 +193,10 @@ export default {
       let _Url = "",
         _parms = {},
         _list = [];
-        if(this.actlist.length<1){
-          MessageBox("请选择商品");
-          return
-        }
-      if (this.isopen) {
-        this.selected = 1;
+      this.selected = 1;
+      if (this.actlist.length < 1) {
+        MessageBox.alert("请选择商品").then(action => {});
+      } else if (this.isopen) {
         Indicator.open({
           text: "结算中...",
           spinnerType: "fading-circle"
@@ -287,23 +278,27 @@ export default {
           // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
           // alert(JSON.stringify(res));
           if (res.err_msg == "get_brand_wcpay_request:ok") {
-            // vm.$router.push("/successPay");
-            vm.ispay = true;
+            vm.$router.push({
+              path: "/successpay",
+              query: { deviceNo: vm.deviceNo }
+            });
           } else {
-            MessageBox("支付失败");
-            vm.$router.push("/");
-            //alert("支付失败,请跳转页面"+res.err_msg);
+            MessageBox.alert("支付失败").then(action => {
+              window.location.href =
+                "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http%3a%2f%2fdev.byn-kj.com%2fmobile%2findex.html&response_type=code&scope=snsapi_base&state=" +
+                localStorage.getItem("setpara") +
+                "#wechat_redirect";
+            });
           }
         }
       );
     },
     //支付环境判断
     getplaytype(_para) {
-      this.$store.commit("setpara", "");
       if (/MicroMessenger/.test(window.navigator.userAgent)) {
         this.playtype = 1;
         window.location.href =
-          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/index.html&response_type=code&scope=snsapi_base&state=" +
+          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http%3a%2f%2fdev.byn-kj.com%2fmobile%2findex.html&response_type=code&scope=snsapi_base&state=" +
           _para +
           "#wechat_redirect";
         // alert("微信客户端");
@@ -317,25 +312,13 @@ export default {
         // alert("其他浏览器");
       }
     },
-    handmodel() {
-      this.ispay = false;
-      this.amout = 0;
-      this.goodsNum = 0;
-      this.actInd = "";
-      this.selected = "";
-      this.actlist = [];
-      this.getlist(this.wxback.state);
-      for (let i in this.getlist) {
-        this.goodslist[i].actInd = false;
-      }
-    },
     getcode() {
       let astr = window.location.href,
         aobj = {};
-
-      
-
-      if (astr.indexOf("code") != -1) {
+      if (this.$route.query.deviceNo) {
+        this.deviceNo = this.$route.query.deviceNo;
+        this.getplaytype(this.$route.query.deviceNo);
+      } else if (astr.indexOf("code") != -1) {
         let anum = astr.indexOf("?");
         astr = astr.substr(anum + 1);
         let aarr = astr.split("&");
@@ -353,21 +336,20 @@ export default {
           ujh = arrUrl[1].indexOf("#");
         }
         const _para = arrUrl[1].substr(0, ujh);
-        this.getplaytype(_para);
+        if (_para) {
+          this.$store.commit("setpara", _para);
+          localStorage.setItem("setpara", _para);
+          this.getplaytype(_para);
+        }
       }
     }
   },
+
   created() {
-    // console.log('created')
-    // let _para = "0273c71bf22d8fc";
-    //   this.getplaytype(_para);
-    //   return;
-    if(this.$store.state.para){
-      this.getplaytype(this.$store.state.para);
-    }else{
-      this.getcode();
-    }
-    
+    // let _para = "865533039231042";
+    // this.getplaytype(_para);
+    // return;
+    this.getcode();
   }
 };
 </script>
@@ -384,34 +366,7 @@ export default {
     background: red;
     width: 40%;
   }
-  .boxs {
-    position: fixed;
-    top: 30%;
-    left: 10%;
-    z-index: 9999;
-    width: 70%;
-    padding: 5%;
-    border-radius:10px;
-    background: #fff;
-    p {
-      margin: 10px;
-    }
-    p:nth-child(1) {
-      color: #000;
-      font-size: 30px;
-    }
-    p:nth-child(2) {
-      color: #999;
-      font-size: 26px;
-    }
-    p:nth-child(3) {
-      margin-top: 20px;
-      button {
-        padding: 6px 15px;
-      }
-      font-size: 35px;
-    }
-  }
+
   .boxtop {
     position: fixed;
     z-index: 9998;
@@ -425,7 +380,7 @@ export default {
     top: 0;
     left: 0;
     color: red;
-    z-index:5;
+    z-index: 5;
     img {
       width: 15px;
       height: 15px;

@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     getcode() {
-      // let code = "0613m8t91164uN1LhBw91G3ft913m8tD";
+      // let code = "081tnT7j28qwuD0Gfq7j2VgN7j2tnT7U";
       // this.getlogin(code);
       // return;
 
@@ -45,7 +45,7 @@ export default {
       this.$http.get("operation/login/" + code).then(res => {
         //   0 未申请  1：已经申请成功
         this.status = res.data.status;
-        localStorage.setItem("TOKEN", res.data.token);
+        localStorage.setItem("operTOKEN", res.data.token);
         this.$router.push({
           path: "/example",
           query: res.data

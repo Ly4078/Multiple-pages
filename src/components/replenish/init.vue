@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     getcode() {
-      // let code = "001RNaYi0uTOOo1OTG0j0kZ9Yi0RNaYO";
+      // let code = "061qbVR90ZAcUx1JA1S90kPSR90qbVRB";
       // this.getlogin(code);
       // return;
 
@@ -44,7 +44,7 @@ export default {
       const _this = this;
       this.$http.get("replenish/login/" + code).then(res => {
         this.status = res.data.status;
-        localStorage.setItem("TOKEN", res.data.token);
+        localStorage.setItem("repTOKEN", res.data.token);
         this.$router.push({
           path: "/list",
           query: res.data

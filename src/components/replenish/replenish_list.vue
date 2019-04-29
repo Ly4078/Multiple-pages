@@ -136,7 +136,7 @@ export default {
             if (res.status == 200) {
               Indicator.close();
               this.status = 4;
-              MessageBox("申请成功，请等待审核结果");
+              MessageBox.alert("申请成功，请等待审核结果").then(action => {});
             }
           });
         }
@@ -144,6 +144,7 @@ export default {
     }
   },
   created() {
+    console.log("this.$route.query:",this.$route.query)
     if (this.$route.query && this.$route.query.status) {
       let _status = this.$route.query.status;
       _status = _status == 0 ? "2" : _status;

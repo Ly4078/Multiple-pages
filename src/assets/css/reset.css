@@ -93,6 +93,9 @@ table {
 }
 
 /*  */
+.mint-msgbox{
+  border-radius: 20px;
+}
 .mint-msgbox-btns {
   height: 70px !important;
   line-height: 70px !important;

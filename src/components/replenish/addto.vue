@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       isopen: true,
-      frequency:0,
+      frequency: 0,
       roomNo: "",
       repdata: {},
       actlist: [],
@@ -60,32 +60,22 @@ export default {
     goback() {
       window.history.back(-1);
     },
-    //数据还原
-    reduction() {
-      this.isopen = true;
-      this.roomNo = "";
-      this.repdata = {};
-      this.actlist = [];
-      this.goodslist = [];
-      this.successdoor = [];
-    },
     //查询列表数据
     getdetails() {
       const _this = this;
       this.$http.get("replenish/details/" + this.roomNo).then(res => {
         if (res.data.length > 0) {
-           let _data = res.data;
+          let _data = res.data;
           for (let i = 0; i < _data.length; i++) {
             _data[i].act = false;
           }
-         _data.sort(this.compare("channelNo"));
+          _data.sort(this.compare("channelNo"));
           setTimeout(() => {
             _this.goodslist = _data;
           }, 200);
-        }else{
-          _this.goodslist=[];
-            MessageBox.alert("此设备补货完成").then(action => {
-          });
+        } else {
+          _this.goodslist = [];
+          MessageBox.alert("此设备补货完成").then(action => {});
         }
       });
     },
@@ -99,25 +89,28 @@ export default {
     },
     //点击数列某条数据
     handitem(obj, ind) {
+      console.log("obj:", obj);
       this.goodslist[ind].act = !this.goodslist[ind].act;
       if (this.goodslist[ind].act) {
         this.actlist.push(obj);
       } else {
         for (let i in this.actlist) {
-          if (obj.id == this.actlist[i].id) {
+          if (obj.channelId == this.actlist[i].channelId) {
             this.actlist.splice(i, 1);
           }
         }
       }
+      console.log("actlist321312", this.actlist, this.actlist.length);
     },
     //开门前检验
     handbuton(val) {
-      this.frequency=0;
+      this.frequency = 0;
+      console.log("actlist", this.actlist, this.actlist.length);
       if (this.actlist.length > 0) {
         if (val == 1) {
           this.opendoor(val);
         } else if (val == 2) {
-          if (this.isSubset(this.successdoor, this.actlist)) {
+          if (this.isContained(this.successdoor, this.actlist)) {
             MessageBox({
               message: "请确认商品已放进货道",
               showCancelButton: true,
@@ -166,7 +159,18 @@ export default {
       }
     },
     //判断一个数组是否是另一数组的子集
+    isContained(a, b) {
+      console.log(a, b);
+      if (!(a instanceof Array) || !(b instanceof Array)) return false;
+      if (a.length < b.length) return false;
+      var aStr = a.toString();
+      for (var i = 0, len = b.length; i < len; i++) {
+        if (aStr.indexOf(b[i]) == -1) return false;
+      }
+      return true;
+    },
     isSubset(arr1, arr2) {
+      console.log(arr1, arr2);
       let i = 0,
         j = 0;
       if (arr1.length < arr2.length) return false;
@@ -197,41 +201,47 @@ export default {
             this.result = res.data;
             Indicator.close();
             this.isopen = true;
-            if( res.data.result==1 || res.data.result==3){
-              this.successdoor=this.actlist;
+            if (val == 1 && res.data.result == 1) {
+              [...this.successdoor] = this.actlist;
             }
-            if(res.data.result ==2){
-              this.successdoor=[];
-              let arr1=[];
-              if(res.data.remark.indexOf("|")==-1){
-                arr1.push(res.data.remark)
-              }else{
-                arr1=res.data.remark.split("|");
-              }
-              
-              for(let i in this.actlist){
-                for(let j in arr1){
-                  if(arr1[j]==this.actlist[i].channelNo){
-                    let _obj=this.actlist[i];
-                     this.successdoor.push(_obj);
+            if (val == 1 && res.data.result == 3) {
+              [...this.successdoor] = this.actlist;
+            }
+            if (val == 2 && res.data.result == 1) {
+              for (let i in this.actlist) {
+                for (let j in this.successdoor) {
+                  if (
+                    this.actlist[i].channelNo == this.successdoor[j].channelNo
+                  ) {
+                    this.successdoor.splice(j, 1);
+                  }
+                }
+                for (let k in this.goodslist) {
+                  if (
+                    this.actlist[i].channelNo == this.goodslist[k].channelNo
+                  ) {
+                    this.goodslist.splice(k, 1);
                   }
                 }
               }
-              if(res.data.remark.indexOf("|")==-1){
-                
-              }else{
-                let arr2=res.data.remark.split("|");
-                arr2.sort();
-                res.data.remark=arr2.join(",")
-                res.data.remark=res.data.remark.replace(/\,/g,"、");
-              }
-              res.data.remark="货道"+res.data.remark+"，补货失败，请确认货道门是否关好。"
+              this.actlist = [];
             }
-            MessageBox.alert(res.data.remark).then(action => {
-             if (val == 2 && res.data.result==1) {
-                history.go(0);
+            if (val == 2 && res.data.result == 2) {
+              if (res.data.remark.indexOf("|") == -1) {
+              } else {
+                let arr2 = res.data.remark.split("|");
+                arr2.sort();
+                res.data.remark = arr2.join(",");
+                res.data.remark = res.data.remark.replace(/\,/g, "、");
               }
-            });
+              res.data.remark =
+                "货道" + res.data.remark + "，补货失败，请确认货道门是否关好。";
+            }
+            if (this.goodslist.length < 1) {
+              MessageBox.alert("此设备补货完成").then(action => {});
+            } else {
+              MessageBox.alert(res.data.remark).then(action => {});
+            }
           } else {
             setTimeout(() => {
               _this.waiting(val, data, num);
@@ -240,7 +250,7 @@ export default {
         });
       } else {
         MessageBox.alert("请求超时，请重启设备再操作").then(action => {
-          this.isopen=true;
+          this.isopen = true;
           Indicator.close();
           // history.go(0);
         });
@@ -294,7 +304,7 @@ export default {
     }
   }
   .addcont {
-    margin-bottom:100px;
+    margin-bottom: 100px;
     ul > li {
       height: 116px;
       padding: 16px 0;

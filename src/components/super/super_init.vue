@@ -12,16 +12,16 @@ export default {
   },
   methods: {
     getcode() {
-      // let code = "061xCujf0AKqOu1o4Agf0mffjf0xCuj8";
+      // let code = "071eEH2V0Nxy022Ztw0V0dPL2V0eEH2d";
       // this.getlogin(code);
       // return;
 
       let astr = window.location.href,
         aobj = {};
-
       if (astr.indexOf("code") != -1) {
         if (this.$store.state.wxback && this.$store.state.wxback.code) {
-          this.resetUrl();
+          window.location.href =
+            "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/super.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
         } else {
           let anum = astr.indexOf("?");
           astr = astr.substr(anum + 1);
@@ -34,7 +34,8 @@ export default {
           this.getlogin(aobj.code);
         }
       } else {
-        this.resetUrl();
+        window.location.href =
+          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf4c3213fb7c381a0&redirect_uri=http://dev.byn-kj.com/mobile/super.html&response_type=code&scope=snsapi_base&state=state#wechat_redirect";
       }
     },
     //登录
@@ -42,7 +43,7 @@ export default {
       const _this = this;
       this.$http.get("super/login/" + code).then(res => {
         if (res.status == 200) {
-          localStorage.setItem("TOKEN", res.data);
+          localStorage.setItem("supTOKEN", res.data);
           this.$router.push({
             path: "/super",
             query: res.data
